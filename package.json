@@ -11,6 +11,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "sass": "^1.53.0",
     "typescript": "^4.7.4"
   },
   "devDependencies": {
@@ -21,13 +22,19 @@
     "eslint-config-prettier": "^8.5.0",
     "husky": "^7.0.0",
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "postcss-html": "^1.5.0",
+    "prettier": "^2.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier-scss": "^0.0.1",
+    "stylelint-config-recommended-scss": "^6.0.0",
+    "stylelint-config-standard-scss": "^4.0.0"
   },
   "scripts": {
     "prepare": "npx husky-init && npm install",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --cache",
+    "stylelint": "stylelint --fix --ignore-path .gitignore --cache",
     "prettify": "prettier --write --ignore-path .gitignore --plugin-search-dir=."
   },
   "eslintConfig": {
@@ -61,6 +68,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}": "npm run lint --",
+    "*.{css,scss,html}": "npm run stylelint --",
     "*.{json,html}": "npm run prettify --"
   }
 }
