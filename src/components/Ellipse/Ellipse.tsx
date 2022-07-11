@@ -1,5 +1,5 @@
 import React from "react";
-import ChildrenProps from "../../types/ChildrenProps";
+import { ChildrenProps } from "../../types/props";
 
 interface Props extends ChildrenProps {
   className?: string;

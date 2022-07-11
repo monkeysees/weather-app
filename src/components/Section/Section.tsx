@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import LevelContext from "../../providers/LevelContext";
-import ChildrenProps from "../../types/ChildrenProps";
+import { ChildrenProps } from "../../types/props";
 
 interface Props extends ChildrenProps {
   className?: string;

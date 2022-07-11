@@ -1,14 +1,162 @@
 import { zipWith, chunk, meanBy, map, set, pick, mapKeys } from "lodash";
-import {
-  startOfToday,
-  getUnixTime,
-  addDays,
-  startOfDay,
-  endOfDay,
-} from "date-fns";
-import { getMostFreqValue } from "./func";
+import { startOfToday, differenceInCalendarDays, startOfDay } from "date-fns";
+import { getMostFreqValue } from "./misc";
 import { assertUnreachable } from "./types";
-import { Direction } from "../types/weather";
+import type {
+  WeatherCode,
+  WeatherType,
+  WindDirection,
+  WeatherDayData,
+} from "../types/weather";
+
+const weatherDescriptionByCode: {
+  [key in WeatherCode]: {
+    type: WeatherType;
+    title: string;
+    details: string;
+  };
+} = {
+  0: {
+    type: "clear",
+    title: "Clear",
+    details: "Clear sky",
+  },
+  1: {
+    type: "light-cloud",
+    title: "Mainly clear",
+    details: "Mainly clear",
+  },
+  2: {
+    type: "light-cloud",
+    title: "Partly cloudy",
+    details: "Partly cloudy",
+  },
+  3: {
+    type: "heavy-cloud",
+    title: "Overcast",
+    details: "Overcast",
+  },
+  45: {
+    type: "heavy-cloud",
+    title: "Fog",
+    details: "Fog",
+  },
+  48: {
+    type: "snow",
+    title: "Freezing fog",
+    details: "Depositing rime fog",
+  },
+  51: {
+    type: "light-rain",
+    title: "Light drizzle",
+    details: "Drizzle: light intensity",
+  },
+  53: {
+    type: "light-rain",
+    title: "Moderate drizzle",
+    details: "Drizzle: moderate intensity",
+  },
+  55: {
+    type: "light-rain",
+    title: "Intense drizzle",
+    details: "Drizzle: dense intensity",
+  },
+  56: {
+    type: "sleet",
+    title: "Light freezing drizzle",
+    details: "Freezing drizzle: light intensity",
+  },
+  57: {
+    type: "sleet",
+    title: "Intense freezing drizzle",
+    details: "Freezing drizzle: dense intensity",
+  },
+  61: {
+    type: "heavy-rain",
+    title: "Light rain",
+    details: "Rain: slight intensity",
+  },
+  63: {
+    type: "heavy-rain",
+    title: "Moderate rain",
+    details: "Rain: moderate intensity",
+  },
+  65: {
+    type: "heavy-rain",
+    title: "",
+    details: "Rain: heavy intensity",
+  },
+  66: {
+    type: "sleet",
+    title: "Light freezing rain",
+    details: "Freezing rain: light intensity",
+  },
+  67: {
+    type: "sleet",
+    title: "Heavy freezing rain",
+    details: "Freezing rain: heavy intensity",
+  },
+  71: {
+    type: "snow",
+    title: "Light snowfall",
+    details: "Snow fall: slight intensity",
+  },
+  73: {
+    type: "snow",
+    title: "Moderate snowfall",
+    details: "Snow fall: moderate intensity",
+  },
+  75: {
+    type: "snow",
+    title: "Heavy snowfall",
+    details: "Snow fall:  heavy intensity",
+  },
+  77: {
+    type: "hail",
+    title: "Hail",
+    details: "Snow grains",
+  },
+  80: {
+    type: "shower",
+    title: "Light shower",
+    details: "Rain showers: slight",
+  },
+  81: {
+    type: "shower",
+    title: "Moderate shower",
+    details: "Rain showers: moderate",
+  },
+  82: {
+    type: "shower",
+    title: "Violent shower",
+    details: "Rain showers: violent",
+  },
+  85: {
+    type: "snow",
+    title: "Light snow",
+    details: "Snow showers slight",
+  },
+  86: {
+    type: "snow",
+    title: "Heavy snow",
+    details: "Snow showers heavy",
+  },
+  95: {
+    type: "thunderstorm",
+    title: "Light thunderstorm",
+    details: "Thunderstorm: Slight or moderate",
+  },
+  96: {
+    type: "thunderstorm",
+    title: "Thunderstorm with light hail",
+    details: "Thunderstorm with slight hail",
+  },
+  99: {
+    type: "thunderstorm",
+    title: "Thunderstorm with heavy hail",
+    details: "Thunderstorm with heavy hail",
+  },
+};
 
 function getDirectionFromDegree(deg: number) {
   if ((deg >= 348.75 && deg <= 360) || (deg >= 0 && deg < 11.25)) {
@@ -78,7 +226,7 @@ function getDirectionFromDegree(deg: number) {
   throw Error("Degree must be between 0 and 360.");
 }
 
-function getDegreeForDirection(dir: Direction) {
+function getDegreeForDirection(dir: WindDirection) {
   switch (dir) {
     case "N": {
       return 0;
@@ -133,18 +281,8 @@ function getDegreeForDirection(dir: Direction) {
   }
 }
 
-function getStartOfToday() {
-  return startOfToday();
-}
-
-function getEndOfNthDayFromToday(n: number) {
-  return endOfDay(startOfDay(addDays(new Date(), n)));
-}
-
 function mapRawFieldname(field: string) {
   switch (field) {
-    case "time":
-      return "ts";
     case "temperature_2m":
       return "temperature";
     case "pressure_msl":
@@ -162,7 +300,7 @@ function mapRawFieldname(field: string) {
   }
 }
 
-function extractWeatherData(rawResponseData: any) {
+function extractWeatherData(rawResponseData: any): WeatherDayData[] {
   const rawHourlyData = rawResponseData.hourly as { [key: string]: any[] };
   const unitsInfo = set(
     mapKeys(
@@ -188,7 +326,7 @@ function extractWeatherData(rawResponseData: any) {
     rawHourlyData.windspeed_10m,
     rawHourlyData.winddirection_10m,
     (
-      ts,
+      tsUnix,
       weatherCode,
       temperature,
       pressure,
@@ -197,7 +335,7 @@ function extractWeatherData(rawResponseData: any) {
       windSpeed,
       windDegree,
     ) => ({
-      ts,
+      date: new Date(tsUnix * 1000),
       weatherCode,
       temperature,
       pressure,
@@ -207,21 +345,29 @@ function extractWeatherData(rawResponseData: any) {
       windDirection: getDirectionFromDegree(windDegree),
     }),
   );
-  const startOfTodayTs = getUnixTime(getStartOfToday());
-  const endOfFifthDayTs = getUnixTime(getEndOfNthDayFromToday(5));
-  const dataForLast5Days = combinedResData.filter(
-    ({ ts }) => ts >= startOfTodayTs && ts <= endOfFifthDayTs,
-  );
+  const today = startOfToday();
+  const dataForLast5Days = combinedResData.filter(({ date }) => {
+    const daysDifference = differenceInCalendarDays(date, today);
+    return daysDifference >= 0 && daysDifference <= 5;
+  });
   const rawDataByDays = chunk(dataForLast5Days, 24);
-
   return rawDataByDays.map((dayData) => ({
-    weatherCode: {
-      value: Number(getMostFreqValue(map(dayData, "weatherCode"))),
-      unit: "",
-    },
+    date: startOfDay(dayData[0].date),
+    description:
+      weatherDescriptionByCode[
+        Number(getMostFreqValue(map(dayData, "weatherCode"))) as WeatherCode
+      ],
     temperature: {
-      value: Math.round(meanBy(dayData, "temperature")),
-      unit: unitsInfo.temperature,
+      day: {
+        value: Math.round(meanBy(dayData.slice(12, 19), "temperature")),
+        unit: unitsInfo.temperature,
+      },
+      night: {
+        value: Math.round(
+          meanBy(dayData.slice(0, 7).concat(dayData.slice(19)), "temperature"),
+        ),
+        unit: unitsInfo.temperature,
+      },
     },
     pressure: {
       value: Math.round(meanBy(dayData, "pressure")),
@@ -240,43 +386,9 @@ function extractWeatherData(rawResponseData: any) {
         value: Math.round(meanBy(dayData, "windSpeed")),
         unit: unitsInfo.windSpeed,
       },
-      direction: {
-        value: getMostFreqValue(map(dayData, "windDirection")),
-        unit: "",
-      },
+      direction: getMostFreqValue(map(dayData, "windDirection")),
     },
-  }));
+  })) as WeatherDayData[];
 }
 
-const weatherCodes = {
-  0: "Clear sky",
-  1: "Mainly clear, partly cloudy, and overcast",
-  2: "Mainly clear, partly cloudy, and overcast",
-  3: "Mainly clear, partly cloudy, and overcast",
-  45: "Fog and depositing rime fog",
-  48: "Fog and depositing rime fog",
-  51: "Drizzle: Light, moderate, and dense intensity",
-  53: "Drizzle: Light, moderate, and dense intensity",
-  55: "Drizzle: Light, moderate, and dense intensity",
-  56: "Freezing Drizzle: Light and dense intensity",
-  57: "Freezing Drizzle: Light and dense intensity",
-  61: "Rain: Slight, moderate and heavy intensity",
-  63: "Rain: Slight, moderate and heavy intensity",
-  65: "Rain: Slight, moderate and heavy intensity",
-  66: "Freezing Rain: Light and heavy intensity",
-  67: "Freezing Rain: Light and heavy intensity",
-  71: "Snow fall: Slight, moderate, and heavy intensity",
-  73: "Snow fall: Slight, moderate, and heavy intensity",
-  75: "Snow fall: Slight, moderate, and heavy intensity",
-  77: "Snow grains",
-  80: "Rain showers: Slight, moderate, and violent",
-  81: "Rain showers: Slight, moderate, and violent",
-  82: "Rain showers: Slight, moderate, and violent",
-  85: "Snow showers slight and heavy",
-  86: "Snow showers slight and heavy",
-  95: "Thunderstorm: Slight or moderate",
-  96: "Thunderstorm with slight and heavy hail",
-  99: "Thunderstorm with slight and heavy hail",
-};
-
-export { extractWeatherData, getDegreeForDirection, weatherCodes };
+export { extractWeatherData, getDegreeForDirection };

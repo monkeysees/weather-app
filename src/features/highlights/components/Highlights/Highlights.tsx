@@ -6,7 +6,10 @@ import HumidityCard from "../HighlightsCard/HumidityCard";
 import WindStatusCard from "../HighlightsCard/WindStatusCard";
 import "./Highlights.scss";
 
-const highlightsItems = [
+const highlightsItems: {
+  id: "wind" | "humidity" | "cloudiness" | "pressure";
+  title: string;
+}[] = [
   {
     id: "wind",
     title: "Wind status",
@@ -27,7 +30,7 @@ const highlightsItems = [
 
 function Hightlights() {
   const weatherData = useContext(WeatherContext);
-  const highlightsData = weatherData[0];
+  const todayHightlights = weatherData[0];
   return (
     <Section className="highlights">
       <Heading className="highlights__heading">Today’s highlights</Heading>
@@ -39,7 +42,7 @@ function Hightlights() {
                 <WindStatusCard
                   key={it.id}
                   title={it.title}
-                  windInfo={highlightsData[it.id]}
+                  windInfo={todayHightlights[it.id]}
                 />
               );
             case "humidity":
@@ -47,8 +50,8 @@ function Hightlights() {
                 <HumidityCard
                   key={it.id}
                   title={it.title}
-                  value={highlightsData[it.id].value}
-                  unit={highlightsData[it.id].unit}
+                  value={todayHightlights[it.id].value}
+                  unit={todayHightlights[it.id].unit}
                 />
               );
             default:
@@ -56,8 +59,8 @@ function Hightlights() {
                 <HighlightsCard
                   key={it.id}
                   title={it.title}
-                  value={highlightsData[it.id].value}
-                  unit={highlightsData[it.id].unit}
+                  value={todayHightlights[it.id].value}
+                  unit={todayHightlights[it.id].unit}
                 />
               );
           }
