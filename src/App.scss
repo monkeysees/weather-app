@@ -1,10 +1,29 @@
 .app {
   min-height: 100vh;
-  padding: 4rem 12rem 16rem;
   color: var(--color-light);
-  background-color: var(--color-background-dark);
   font-family: var(--font-default);
   font-size: 1.6rem;
   font-weight: 500;
   line-height: 1.175;
+  display: grid;
+  grid-template-columns: 1fr 2.15fr;
+
+  &__currentWeather {
+    padding: 19rem 13rem 5rem;
+    background-color: var(--color-background-medium);
+  }
+
+  &__currentWeatherBg {
+    position: absolute;
+    top: 10rem;
+    left: -12rem;
+    width: 70rem;
+    filter: opacity(0.05);
+  }
+
+  &__forecast-with-highlights {
+    padding: 15rem 13rem;
+    background-color: var(--color-background-dark);
+    z-index: 1;
+  }
 }
