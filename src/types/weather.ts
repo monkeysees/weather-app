@@ -58,15 +58,18 @@ type WindDirection =
   | "NW"
   | "NNW";
 
+type TemperatureUnit = "°C" | "°F";
+type SpeedUnit = "km/h" | "mp/h";
+
 type BaseWeatherDataPoint<ValueType, UnitType> = {
   value: ValueType;
   unit: UnitType;
 };
 
-type TemperatureDataPoint = BaseWeatherDataPoint<number, "°C" | "°F">;
+type TemperatureDataPoint = BaseWeatherDataPoint<number, TemperatureUnit>;
 
 type WindDataPoint = {
-  speed: BaseWeatherDataPoint<number, "km/h" | "mph">;
+  speed: BaseWeatherDataPoint<number, SpeedUnit>;
   direction: WindDirection;
 };
 
@@ -84,4 +87,11 @@ interface WeatherDayData {
   wind: WindDataPoint;
 }
 
-export type { WindDirection, WindDataPoint, WeatherCode, WeatherType, WeatherDayData };
+export type {
+  WindDirection,
+  WindDataPoint,
+  TemperatureUnit,
+  WeatherCode,
+  WeatherType,
+  WeatherDayData,
+};

@@ -1,12 +1,24 @@
 .app {
+  --forecasts-padding-inline: 13rem;
+
   min-height: 100vh;
   color: var(--color-light);
   font-family: var(--font-default);
   font-size: 1.6rem;
   font-weight: 500;
   line-height: 1.175;
-  display: grid;
-  grid-template-columns: 1fr 2.15fr;
+
+  &__unitsSwitch {
+    position: absolute;
+    z-index: 1;
+    top: 4.2rem;
+    right: var(--forecasts-padding-inline);
+  }
+
+  &__main {
+    display: grid;
+    grid-template-columns: 1fr 2.15fr;
+  }
 
   &__currentWeather {
     padding: 19rem 13rem 5rem;
@@ -22,8 +34,8 @@
   }
 
   &__forecast-with-highlights {
-    padding: 15rem 13rem;
+    padding: 15rem var(--forecasts-padding-inline);
     background-color: var(--color-background-dark);
-    z-index: 1;
+    z-index: 0;
   }
 }
