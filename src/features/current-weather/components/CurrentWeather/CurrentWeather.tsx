@@ -1,17 +1,24 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Section, Heading, Icon, WeatherImg } from "../../../../components";
-import UserContext from "../../../../providers/UserContext";
-import WeatherContext from "../../../../providers/WeatherContext";
+import { useUser } from "../../../../providers/UserProvider";
+import { useWeather } from "../../../../providers/WeatherProvider";
 import { formatDate } from "../../../../utils/datetime";
 import "./CurrentWeather.scss";
 
 function CurrentWeather() {
+  const weatherData = useWeather();
+  const { location } = useUser();
+
+  if (!weatherData.length) {
+    return null;
+  }
+
   const {
     temperature: { day: dayTemperature },
     description: weatherDescription,
     date,
-  } = useContext(WeatherContext)[0];
-  const { location } = useContext(UserContext);
+  } = weatherData[0];
+
   return (
     <Section className="currentWeather">
       <WeatherImg
@@ -33,7 +40,9 @@ function CurrentWeather() {
       </Heading>
       <p className="currentWeather__location">
         <Icon type="location" className="currentWeather__locationIcon" />
-        <span className="currentWeather__locationPlace">{location.current.city}</span>
+        <span className="currentWeather__locationPlace">
+          {location.current.city}
+        </span>
       </p>
     </Section>
   );

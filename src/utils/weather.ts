@@ -1,4 +1,4 @@
-import { zipWith, chunk, meanBy, map, set, pick, mapKeys } from "lodash";
+import { zipWith, chunk, meanBy, map, pick, mapKeys, mapValues } from "lodash";
 import { startOfToday, differenceInCalendarDays, startOfDay } from "date-fns";
 import { getMostFreqValue } from "./misc";
 import { assertUnreachable } from "./types";
@@ -7,6 +7,7 @@ import type {
   WeatherType,
   WindDirection,
   WeatherDayData,
+  TemperatureUnit,
 } from "../types/weather";
 
 const weatherDescriptionByCode: {
@@ -300,9 +301,18 @@ function mapRawFieldname(field: string) {
   }
 }
 
+function mapRawUnit(unit: string) {
+  switch (unit) {
+    case "hPa":
+      return "mb";
+    default:
+      return unit;
+  }
+}
+
 function extractWeatherData(rawResponseData: any): WeatherDayData[] {
   const rawHourlyData = rawResponseData.hourly as { [key: string]: any[] };
-  const unitsInfo = set(
+  const unitsInfo = mapValues(
     mapKeys(
       pick(rawResponseData.hourly_units, [
         "temperature_2m",
@@ -313,8 +323,7 @@ function extractWeatherData(rawResponseData: any): WeatherDayData[] {
       ]),
       (_, k) => mapRawFieldname(k),
     ),
-    "pressure",
-    "mb",
+    (v) => mapRawUnit(v),
   );
   const combinedResData = zipWith(
     rawHourlyData.time,
@@ -391,4 +400,24 @@ function extractWeatherData(rawResponseData: any): WeatherDayData[] {
   })) as WeatherDayData[];
 }
 
-export { extractWeatherData, getDegreeForDirection };
+function convertTemperature(
+  value: number,
+  from: TemperatureUnit,
+  to: TemperatureUnit,
+) {
+  if (from === to) {
+    return value;
+  }
+
+  if (from === "°C" && to === "°F") {
+    return Math.round(value * 1.8 + 32);
+  }
+
+  if (from === "°F" && to === "°C") {
+    return Math.round((value - 32) / 1.8);
+  }
+
+  throw Error("Only conversion from/to °C and °F are supported.");
+}
+
+export { extractWeatherData, getDegreeForDirection, convertTemperature };

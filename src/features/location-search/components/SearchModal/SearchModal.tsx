@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReactModal from "react-modal";
-import UserContext from "../../../../providers/UserContext";
+import { useUser } from "../../../../providers/UserProvider";
 import { Button, Icon } from "../../../../components";
 import SearchItem from "../SearchItem";
 import "./SearchModal.scss";
@@ -13,7 +13,7 @@ interface Props {
 function LocationSearch({ isOpen = false, onRequestClose }: Props) {
   const {
     location: { searchedCities },
-  } = useContext(UserContext);
+  } = useUser();
 
   return (
     <ReactModal

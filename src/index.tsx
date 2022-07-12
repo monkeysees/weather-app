@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import ReactModal from "react-modal";
-import "./index.scss";
+import { UserProvider } from "./providers/UserProvider";
+import { WeatherProvider } from "./providers/WeatherProvider";
 import App from "./App";
+import "./index.scss";
 
 const rootElementId = "root";
 ReactModal.setAppElement(`#${rootElementId}`);
@@ -12,6 +14,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <UserProvider>
+      <WeatherProvider>
+        <App />
+      </WeatherProvider>
+    </UserProvider>
   </React.StrictMode>,
 );

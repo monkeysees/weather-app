@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import LevelContext from "../../providers/LevelContext";
+import { NestingLevelContext } from "../../providers/NestingLevelProvider";
 import { ChildrenProps } from "../../types/props";
 
 interface Props extends ChildrenProps {
@@ -7,12 +7,12 @@ interface Props extends ChildrenProps {
 }
 
 function Section({ className, children }: Props) {
-  const level = useContext(LevelContext);
+  const level = useContext(NestingLevelContext);
   return (
     <section className={className}>
-      <LevelContext.Provider value={level + 1}>
+      <NestingLevelContext.Provider value={level + 1}>
         {children}
-      </LevelContext.Provider>
+      </NestingLevelContext.Provider>
     </section>
   );
 }

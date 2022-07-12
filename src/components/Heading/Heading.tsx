@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import LevelContext from "../../providers/LevelContext";
+import { NestingLevelContext } from "../../providers/NestingLevelProvider";
 import { ChildrenProps } from "../../types/props";
 
 interface Props extends ChildrenProps {
@@ -7,7 +7,7 @@ interface Props extends ChildrenProps {
 }
 
 function Heading({ className, children }: Props) {
-  const level = useContext(LevelContext);
+  const level = useContext(NestingLevelContext);
   switch (level) {
     case 0:
       throw Error("Heading must be inside a Section!");

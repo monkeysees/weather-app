@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Ellipse, Button } from "../../../../components";
-import UserContext from "../../../../providers/UserContext";
+import { useUser, useUserDispatch } from "../../../../providers/UserProvider";
+import { useWeatherDispatch } from "../../../../providers/WeatherProvider";
 import "./UnitsSwitch.scss";
 import { TemperatureUnit } from "../../../../types/weather";
 
@@ -18,7 +19,15 @@ function getClassName(
 function UnitsSwitch() {
   const {
     units: { temperature: userTempUnit },
-  } = useContext(UserContext);
+  } = useUser();
+  const userDispatch = useUserDispatch();
+  const weatherDispatch = useWeatherDispatch();
+
+  function handleTempUnitSwitch(newUnit: TemperatureUnit) {
+    userDispatch({ type: "change-temp-unit", newUnit });
+    weatherDispatch({ type: "convert-temp-unit", newUnit });
+  }
+
   return (
     <div className="unitsSwitches">
       {temperatureUnits.map((tempUnit) => (
@@ -26,7 +35,10 @@ function UnitsSwitch() {
           key={tempUnit}
           className={getClassName(userTempUnit, tempUnit)}
         >
-          <Button className="unitsSwitch__btn">
+          <Button
+            className="unitsSwitch__btn"
+            onClick={() => handleTempUnitSwitch(tempUnit)}
+          >
             <span className="unitsSwitch__unit">{tempUnit}</span>
           </Button>
         </Ellipse>

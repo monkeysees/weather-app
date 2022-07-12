@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import WeatherContext from "../../../../providers/WeatherContext";
+import React from "react";
+import { useWeather } from "../../../../providers/WeatherProvider";
 import { Section, Heading } from "../../../../components";
 import HighlightsCard from "../HighlightsCard";
 import HumidityCard from "../HighlightsCard/HumidityCard";
@@ -29,7 +29,12 @@ const highlightsItems: {
 ];
 
 function Hightlights() {
-  const weatherData = useContext(WeatherContext);
+  const weatherData = useWeather();
+
+  if (!weatherData.length) {
+    return null;
+  }
+
   const todayHightlights = weatherData[0];
   return (
     <Section className="highlights">
