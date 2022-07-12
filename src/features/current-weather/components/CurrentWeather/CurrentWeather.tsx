@@ -33,7 +33,7 @@ function CurrentWeather() {
       </Heading>
       <p className="currentWeather__location">
         <Icon type="location" className="currentWeather__locationIcon" />
-        <span className="currentWeather__locationPlace">{location}</span>
+        <span className="currentWeather__locationPlace">{location.current.city}</span>
       </p>
     </Section>
   );

@@ -40,6 +40,15 @@ select {
   font: inherit;
 }
 
+/* Better defaults */
+input {
+  cursor: currentcolor;
+
+  &::placeholder {
+    opacity: 1;
+  }
+}
+
 /* Should always be customized */
 button {
   &:focus,

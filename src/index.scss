@@ -7,6 +7,8 @@
   --color-dark: rgba(17 14 60 / 100%);
   --color-light: rgba(231 231 235 / 100%);
   --color-primary: rgba(60 71 233 / 100%);
+  --color-grey-dark: rgba(97 100 117 / 100%);
+  --color-grey-medium: rgba(110 112 122 / 100%);
   --color-grey-light: rgba(160 159 177 / 100%);
   --color-background-dark: rgba(16 14 29 / 100%);
   --color-background-medium: rgba(30 33 58 / 100%);
@@ -23,4 +25,12 @@ html {
   font-size: 62.5%;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+body {
+  color: var(--color-light);
+  font-family: var(--font-default);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.175;
 }

@@ -2,11 +2,14 @@
   --forecasts-padding-inline: 13rem;
 
   min-height: 100vh;
-  color: var(--color-light);
-  font-family: var(--font-default);
-  font-size: 1.6rem;
-  font-weight: 500;
-  line-height: 1.175;
+
+  &__locationSearch {
+    position: absolute;
+    z-index: 1;
+    top: 4.2rem;
+    left: 3%;
+    width: 27%;
+  }
 
   &__unitsSwitch {
     position: absolute;
@@ -17,7 +20,7 @@
 
   &__main {
     display: grid;
-    grid-template-columns: 1fr 2.15fr;
+    grid-template-columns: 33% 67%;
   }
 
   &__currentWeather {
