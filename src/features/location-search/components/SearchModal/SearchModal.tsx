@@ -1,8 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { useUser } from "../../../../providers/UserProvider";
 import { Button, Icon } from "../../../../components";
-import SearchItem from "../SearchItem";
+import SearchList from "../SearchList";
 import "./SearchModal.scss";
 
 interface Props {
@@ -10,11 +9,7 @@ interface Props {
   onRequestClose: () => void;
 }
 
-function LocationSearch({ isOpen = false, onRequestClose }: Props) {
-  const {
-    location: { searchedCities },
-  } = useUser();
-
+function SearchModal({ isOpen = false, onRequestClose }: Props) {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -43,16 +38,9 @@ function LocationSearch({ isOpen = false, onRequestClose }: Props) {
         </div>
         <Button className="searchModal__inputBtn">Search</Button>
       </section>
-      <ul className="searchModal__searchedItems">
-        {searchedCities.map((loc) => (
-          <SearchItem
-            key={`${loc.coords.lat} ${loc.coords.lon}`}
-            city={loc.city}
-          />
-        ))}
-      </ul>
+      <SearchList />
     </ReactModal>
   );
 }
 
-export default LocationSearch;
+export default SearchModal;
