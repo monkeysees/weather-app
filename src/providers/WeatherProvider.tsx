@@ -5,6 +5,7 @@ import {
   useQuery,
   QueryFunctionContext,
 } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import axios from "axios";
 import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
 import { useUser } from "./UserProvider";
@@ -20,7 +21,10 @@ const queryClient = new QueryClient();
 
 function WeatherProvider({ children }: ChildrenProps) {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
+      {children}
+    </QueryClientProvider>
   );
 }
 
