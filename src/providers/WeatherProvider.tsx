@@ -1,82 +1,60 @@
-import React, { createContext, useContext, useReducer } from "react";
-import type { TemperatureUnit, WeatherDayData } from "../types/weather";
+import React from "react";
+import {
+  QueryClientProvider,
+  QueryClient,
+  useQuery,
+  QueryFunctionContext,
+} from "react-query";
+import axios from "axios";
+import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
+import { useUser } from "./UserProvider";
+import type { Coordinates } from "../types/weather";
 import type { ChildrenProps } from "../types/props";
-import { convertTemperature } from "../utils/weather";
-import { assertUnreachable } from "../utils/types";
+import {
+  convertWeatherTemperatures,
+  extractWeatherData,
+} from "../utils/weather";
 
-interface NewWeatherDataAction {
-  type: "new";
-  daysData: WeatherDayData[];
-}
-
-interface ConvertTemperatureUnitAction {
-  type: "convert-temp-unit";
-  newUnit: TemperatureUnit;
-}
-
-type ReducerAction = NewWeatherDataAction | ConvertTemperatureUnitAction;
-
-function weatherReducer(
-  weatherDaysData: WeatherDayData[],
-  action: ReducerAction,
-) {
-  const actionType = action.type;
-  switch (actionType) {
-    case "new": {
-      return action.daysData;
-    }
-    case "convert-temp-unit": {
-      return weatherDaysData.map((dayData) => {
-        const newDayData: WeatherDayData = { ...dayData };
-        newDayData.temperature = {
-          day: {
-            value: convertTemperature(
-              dayData.temperature.day.value,
-              dayData.temperature.day.unit,
-              action.newUnit,
-            ),
-            unit: action.newUnit,
-          },
-          night: {
-            value: convertTemperature(
-              dayData.temperature.day.value,
-              dayData.temperature.day.unit,
-              action.newUnit,
-            ),
-            unit: action.newUnit,
-          },
-        };
-        return newDayData;
-      });
-    }
-    default:
-      return assertUnreachable(actionType);
-  }
-}
-
-const WeatherContext = createContext<WeatherDayData[]>([]);
-const WeatherDispatchContext = createContext<React.Dispatch<ReducerAction>>(
-  () => null,
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: minutesToMilliseconds(4.5),
+      cacheTime: hoursToMilliseconds(24),
+    },
+  },
+});
 
 function WeatherProvider({ children }: ChildrenProps) {
-  const [weather, dispatch] = useReducer(weatherReducer, []);
-
   return (
-    <WeatherContext.Provider value={weather}>
-      <WeatherDispatchContext.Provider value={dispatch}>
-        {children}
-      </WeatherDispatchContext.Provider>
-    </WeatherContext.Provider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
 
+function fetchRawWeather({
+  queryKey: [{ location }],
+}: QueryFunctionContext<[{ scope: "weather"; location: Coordinates }]>) {
+  return axios
+    .get(
+      `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&hourly=temperature_2m,relativehumidity_2m,pressure_msl,weathercode,cloudcover,windspeed_10m,winddirection_10m&timeformat=unixtime&past_days=1`,
+    )
+    .then((res) => res.data);
+}
+
 function useWeather() {
-  return useContext(WeatherContext);
+  const {
+    location: { current: currentLocation },
+    units: { temperature: tempUnit },
+  } = useUser();
+  const queryInfo = useQuery(
+    [{ scope: "weather", location: currentLocation.coords }],
+    fetchRawWeather,
+  );
+
+  const rawWeather = queryInfo.status === "success" ? queryInfo.data : null;
+
+  return rawWeather
+    ? convertWeatherTemperatures(extractWeatherData(rawWeather), tempUnit)
+    : [];
 }
 
-function useWeatherDispatch() {
-  return useContext(WeatherDispatchContext);
-}
-
-export { useWeather, useWeatherDispatch, WeatherProvider };
+export { useWeather, WeatherProvider };

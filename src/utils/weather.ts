@@ -420,4 +420,36 @@ function convertTemperature(
   throw Error("Only conversion from/to °C and °F are supported.");
 }
 
-export { extractWeatherData, getDegreeForDirection, convertTemperature };
+function convertWeatherTemperatures(
+  daysData: WeatherDayData[],
+  newUnit: TemperatureUnit,
+) {
+  return daysData.map((dayData) => {
+    const newDayData: WeatherDayData = { ...dayData };
+    newDayData.temperature = {
+      day: {
+        value: convertTemperature(
+          dayData.temperature.day.value,
+          dayData.temperature.day.unit,
+          newUnit,
+        ),
+        unit: newUnit,
+      },
+      night: {
+        value: convertTemperature(
+          dayData.temperature.night.value,
+          dayData.temperature.night.unit,
+          newUnit,
+        ),
+        unit: newUnit,
+      },
+    };
+    return newDayData;
+  });
+}
+
+export {
+  extractWeatherData,
+  getDegreeForDirection,
+  convertWeatherTemperatures,
+};

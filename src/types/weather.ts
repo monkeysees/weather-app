@@ -60,6 +60,10 @@ type WindDirection =
 
 type TemperatureUnit = "°C" | "°F";
 type SpeedUnit = "km/h" | "mp/h";
+type Coordinates = {
+  lat: number;
+  lon: number;
+};
 
 type BaseWeatherDataPoint<ValueType, UnitType> = {
   value: ValueType;
@@ -94,4 +98,5 @@ export type {
   WeatherCode,
   WeatherType,
   WeatherDayData,
+  Coordinates,
 };
