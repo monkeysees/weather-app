@@ -19,6 +19,9 @@ function CurrentWeather() {
     date,
   } = weatherData[0];
 
+  const cityToRender =
+    "city" in location.current ? location.current.city : "Current location";
+
   return (
     <Section className="currentWeather">
       <WeatherImg
@@ -40,9 +43,7 @@ function CurrentWeather() {
       </Heading>
       <p className="currentWeather__location">
         <Icon type="location" className="currentWeather__locationIcon" />
-        <span className="currentWeather__locationPlace">
-          {location.current.city}
-        </span>
+        <span className="currentWeather__locationPlace">{cityToRender}</span>
       </p>
     </Section>
   );

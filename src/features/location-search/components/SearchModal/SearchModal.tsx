@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import ReactModal from "react-modal";
 import { debounce } from "lodash";
+import { useUserDispatch } from "../../../../providers/UserProvider";
+import { Location } from "../../../../types/weather";
 import { Button, Icon } from "../../../../components";
 import SearchList from "../SearchList";
 import "./SearchModal.scss";
@@ -11,6 +13,7 @@ interface Props {
 }
 
 function SearchModal({ isOpen = false, onRequestClose }: Props) {
+  const userDispatch = useUserDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
   function queryChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -28,6 +31,14 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
       onRequestClose();
     },
     [onRequestClose],
+  );
+
+  const handleSearchItemSelected = useMemo(
+    () => (location: Location) => {
+      handleRequestClose();
+      userDispatch({ type: "change-location", location });
+    },
+    [userDispatch, handleRequestClose],
   );
 
   return (
@@ -59,7 +70,10 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
         </div>
         <Button className="searchModal__inputBtn">Search</Button>
       </section>
-      <SearchList searchQuery={searchQuery} />
+      <SearchList
+        searchQuery={searchQuery}
+        onItemSelected={handleSearchItemSelected}
+      />
     </ReactModal>
   );
 }

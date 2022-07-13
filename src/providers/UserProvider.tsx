@@ -5,7 +5,7 @@ import { assertUnreachable } from "../utils/types";
 
 type UserLocation = {
   current: Location;
-  searchedCitiesHistory: Location[];
+  searchHistory: Location[];
 };
 
 type User = {
@@ -24,7 +24,7 @@ const initialUser: User = {
         lon: 37.61556,
       },
     },
-    searchedCitiesHistory: [
+    searchHistory: [
       {
         city: "Moscow",
         adminZone1: "Moscow",
@@ -79,10 +79,15 @@ const initialUser: User = {
 
 interface ChangeTemperatureUnit {
   type: "change-temp-unit";
-  newUnit: TemperatureUnit;
+  unit: TemperatureUnit;
 }
 
-type ReducerAction = ChangeTemperatureUnit;
+interface ChangeLocation {
+  type: "change-location";
+  location: Location;
+}
+
+type ReducerAction = ChangeTemperatureUnit | ChangeLocation;
 
 function userReducer(user: User, action: ReducerAction) {
   const actionType = action.type;
@@ -91,8 +96,18 @@ function userReducer(user: User, action: ReducerAction) {
       const newUser = { ...user };
       newUser.units = {
         ...newUser.units,
-        temperature: action.newUnit,
+        temperature: action.unit,
       };
+      return newUser;
+    }
+    case "change-location": {
+      const newLocation = action.location;
+      const newUser = {
+        ...user,
+        location: { ...user.location, current: newLocation },
+      };
+      const { searchHistory } = user.location;
+      newUser.location.searchHistory = [newLocation, ...searchHistory];
       return newUser;
     }
     default:

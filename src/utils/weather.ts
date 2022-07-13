@@ -8,7 +8,7 @@ import type {
   WindDirection,
   WeatherDayData,
   TemperatureUnit,
-  Location,
+  CityLocation,
 } from "../types/weather";
 
 const weatherDescriptionByCode: {
@@ -401,7 +401,7 @@ function extractWeatherData(rawResponseData: any): WeatherDayData[] {
   })) as WeatherDayData[];
 }
 
-function extractCitiesData(rawResponseData: { results?: any[] }): Location[] {
+function extractCitiesData(rawResponseData: { results?: any[] }): CityLocation[] {
   if (!rawResponseData.results) {
     return [];
   }
@@ -412,7 +412,7 @@ function extractCitiesData(rawResponseData: { results?: any[] }): Location[] {
     country: rawLocation.country,
     coords: {
       lat: rawLocation.latitude,
-      lon: rawLocation.lon,
+      lon: rawLocation.longitude,
     },
   }));
 }

@@ -68,20 +68,28 @@ function useCities(searchQuery: string) {
 
 function useWeather() {
   const {
-    location: { current: currentLocation },
+    location: { current: currentLocation, searchHistory },
     units: { temperature: tempUnit },
   } = useUser();
   const queryInfo = useQuery(
     [{ scope: "weather", location: currentLocation.coords }],
     fetchRawWeather,
     {
-      staleTime: minutesToMilliseconds(4.5),
+      staleTime: minutesToMilliseconds(5),
       cacheTime: hoursToMilliseconds(24),
-      refetchInterval: minutesToMilliseconds(5),
+      refetchInterval: minutesToMilliseconds(4.5),
     },
   );
 
-  const rawWeather = queryInfo.status === "success" ? queryInfo.data : null;
+  const prevLocation = searchHistory[1];
+  const prevWeatherData = prevLocation
+    ? queryClient.getQueryData<any>([
+        { scope: "weather", location: prevLocation.coords },
+      ])
+    : undefined;
+
+  const rawWeather =
+    queryInfo.status === "success" ? queryInfo.data : prevWeatherData;
 
   return rawWeather
     ? convertWeatherTemperatures(extractWeatherData(rawWeather), tempUnit)

@@ -21,8 +21,8 @@ function UnitsSwitch() {
   } = useUser();
   const userDispatch = useUserDispatch();
 
-  function handleTempUnitSwitch(newUnit: TemperatureUnit) {
-    userDispatch({ type: "change-temp-unit", newUnit });
+  function handleTempUnitSwitch(unit: TemperatureUnit) {
+    userDispatch({ type: "change-temp-unit", unit });
   }
 
   return (
