@@ -12,6 +12,7 @@ import type { Coordinates } from "../types/weather";
 import type { ChildrenProps } from "../types/props";
 import {
   convertWeatherTemperatures,
+  extractCitiesData,
   extractWeatherData,
 } from "../utils/weather";
 
@@ -31,6 +32,38 @@ function fetchRawWeather({
       `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&hourly=temperature_2m,relativehumidity_2m,pressure_msl,weathercode,cloudcover,windspeed_10m,winddirection_10m&timeformat=unixtime&past_days=1`,
     )
     .then((res) => res.data);
+}
+
+function fetchRawCities({
+  queryKey: [{ searchQuery }],
+  signal,
+}: QueryFunctionContext<[{ scope: "cities"; searchQuery: string }]>) {
+  queryClient.cancelQueries([{ scope: "cities" }]);
+
+  if (!searchQuery) {
+    return [];
+  }
+
+  return axios
+    .get(`https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}`, {
+      signal,
+    })
+    .then((res) => extractCitiesData(res.data));
+}
+
+function useCities(searchQuery: string) {
+  const queryInfo = useQuery(
+    [{ scope: "cities", searchQuery }],
+    fetchRawCities,
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
+  );
+
+  const cities = queryInfo.status === "success" ? queryInfo.data : [];
+
+  return cities;
 }
 
 function useWeather() {
@@ -55,4 +88,4 @@ function useWeather() {
     : [];
 }
 
-export { useWeather, WeatherProvider };
+export { useWeather, useCities, WeatherProvider };

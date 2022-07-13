@@ -1,17 +1,11 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { ChildrenProps } from "../types/props";
-import { TemperatureUnit } from "../types/weather";
+import { TemperatureUnit, Location } from "../types/weather";
 import { assertUnreachable } from "../utils/types";
-
-type Location = {
-  city: string;
-  country: string;
-  coords: { lat: number; lon: number };
-};
 
 type UserLocation = {
   current: Location;
-  searchedCities: Location[];
+  searchedCitiesHistory: Location[];
 };
 
 type User = {
@@ -23,15 +17,17 @@ const initialUser: User = {
   location: {
     current: {
       city: "Moscow",
+      adminZone1: "Moscow",
       country: "Russia",
       coords: {
         lat: 55.75222,
         lon: 37.61556,
       },
     },
-    searchedCities: [
+    searchedCitiesHistory: [
       {
         city: "Moscow",
+        adminZone1: "Moscow",
         country: "Russia",
         coords: {
           lat: 55.75222,
@@ -40,6 +36,7 @@ const initialUser: User = {
       },
       {
         city: "Kyiv",
+        adminZone1: "Kyiv City",
         country: "Ukraine",
         coords: {
           lat: 50.45466,
@@ -48,6 +45,7 @@ const initialUser: User = {
       },
       {
         city: "London",
+        adminZone1: "England",
         country: "United Kingdom",
         coords: {
           lat: 51.50853,
@@ -56,6 +54,7 @@ const initialUser: User = {
       },
       {
         city: "Barcelona",
+        adminZone1: "Catalonia",
         country: "Spain",
         coords: {
           lat: 41.38879,
@@ -64,6 +63,7 @@ const initialUser: User = {
       },
       {
         city: "New York",
+        adminZone1: "New York",
         country: "United States",
         coords: {
           lat: 40.71427,

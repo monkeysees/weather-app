@@ -91,6 +91,13 @@ interface WeatherDayData {
   wind: WindDataPoint;
 }
 
+interface Location {
+  city: string;
+  adminZone1: string;
+  country: string;
+  coords: { lat: number; lon: number };
+}
+
 export type {
   WindDirection,
   WindDataPoint,
@@ -99,4 +106,5 @@ export type {
   WeatherType,
   WeatherDayData,
   Coordinates,
+  Location,
 };

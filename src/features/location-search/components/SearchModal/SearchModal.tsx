@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import ReactModal from "react-modal";
+import { debounce } from "lodash";
 import { Button, Icon } from "../../../../components";
 import SearchList from "../SearchList";
 import "./SearchModal.scss";
@@ -10,10 +11,29 @@ interface Props {
 }
 
 function SearchModal({ isOpen = false, onRequestClose }: Props) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  function queryChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchQuery(e.target.value);
+  }
+
+  const debouncedQueryChangeHandler = useMemo(
+    () => debounce(queryChangeHandler, 250),
+    [],
+  );
+
+  const handleRequestClose = useMemo(
+    () => () => {
+      setSearchQuery("");
+      onRequestClose();
+    },
+    [onRequestClose],
+  );
+
   return (
     <ReactModal
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={handleRequestClose}
       shouldReturnFocusAfterClose={false}
       style={{
         overlay: { backgroundColor: "none", zIndex: 1, width: "33%" },
@@ -33,12 +53,13 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
             aria-label="Search location"
             placeholder="Enter location"
             className="searchModal__input"
+            onChange={debouncedQueryChangeHandler}
           />
           <Icon type="search" className="searchModal__inputIcon" />
         </div>
         <Button className="searchModal__inputBtn">Search</Button>
       </section>
-      <SearchList />
+      <SearchList searchQuery={searchQuery} />
     </ReactModal>
   );
 }
