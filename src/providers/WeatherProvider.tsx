@@ -15,14 +15,7 @@ import {
   extractWeatherData,
 } from "../utils/weather";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: minutesToMilliseconds(4.5),
-      cacheTime: hoursToMilliseconds(24),
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 function WeatherProvider({ children }: ChildrenProps) {
   return (
@@ -48,6 +41,11 @@ function useWeather() {
   const queryInfo = useQuery(
     [{ scope: "weather", location: currentLocation.coords }],
     fetchRawWeather,
+    {
+      staleTime: minutesToMilliseconds(4.5),
+      cacheTime: hoursToMilliseconds(24),
+      refetchInterval: minutesToMilliseconds(5),
+    },
   );
 
   const rawWeather = queryInfo.status === "success" ? queryInfo.data : null;
