@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { ChildrenProps } from "../types/props";
 import { TemperatureUnit, Location } from "../types/weather";
 import { assertUnreachable } from "../utils/types";
@@ -13,7 +13,45 @@ type User = {
   units: { temperature: TemperatureUnit };
 };
 
-const initialUser: User = {
+interface ChangeTemperatureUnit {
+  type: "change-temp-unit";
+  unit: TemperatureUnit;
+}
+
+interface ChangeLocation {
+  type: "change-location";
+  location: Location;
+}
+
+type ReducerAction = ChangeTemperatureUnit | ChangeLocation;
+
+function userReducer(user: User, action: ReducerAction) {
+  const actionType = action.type;
+  switch (actionType) {
+    case "change-temp-unit": {
+      const newUser = { ...user };
+      newUser.units = {
+        ...newUser.units,
+        temperature: action.unit,
+      };
+      return newUser;
+    }
+    case "change-location": {
+      const newLocation = action.location;
+      const newUser = {
+        ...user,
+        location: { ...user.location, current: newLocation },
+      };
+      const { searchHistory } = user.location;
+      newUser.location.searchHistory = [newLocation, ...searchHistory];
+      return newUser;
+    }
+    default:
+      return assertUnreachable(actionType);
+  }
+}
+
+const initialUserData: User = {
   location: {
     current: {
       city: "Moscow",
@@ -77,51 +115,26 @@ const initialUser: User = {
   },
 };
 
-interface ChangeTemperatureUnit {
-  type: "change-temp-unit";
-  unit: TemperatureUnit;
+function initializeUser(initialValue = initialUserData) {
+  const storedData = localStorage.getItem("user");
+  return storedData ? (JSON.parse(storedData) as User) : initialValue;
 }
 
-interface ChangeLocation {
-  type: "change-location";
-  location: Location;
-}
-
-type ReducerAction = ChangeTemperatureUnit | ChangeLocation;
-
-function userReducer(user: User, action: ReducerAction) {
-  const actionType = action.type;
-  switch (actionType) {
-    case "change-temp-unit": {
-      const newUser = { ...user };
-      newUser.units = {
-        ...newUser.units,
-        temperature: action.unit,
-      };
-      return newUser;
-    }
-    case "change-location": {
-      const newLocation = action.location;
-      const newUser = {
-        ...user,
-        location: { ...user.location, current: newLocation },
-      };
-      const { searchHistory } = user.location;
-      newUser.location.searchHistory = [newLocation, ...searchHistory];
-      return newUser;
-    }
-    default:
-      return assertUnreachable(actionType);
-  }
-}
-
-const UserContext = createContext<User>(initialUser);
+const UserContext = createContext<User>(initialUserData);
 const UserDispatchContext = createContext<React.Dispatch<ReducerAction>>(
   () => null,
 );
 
 function UserProvider({ children }: ChildrenProps) {
-  const [user, dispatch] = useReducer(userReducer, initialUser);
+  const [user, dispatch] = useReducer(
+    userReducer,
+    initialUserData,
+    initializeUser,
+  );
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   return (
     <UserContext.Provider value={user}>
