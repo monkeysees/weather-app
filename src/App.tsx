@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useIsFetching } from "react-query";
 import { Toaster, toast } from "react-hot-toast";
+import { useUser } from "./providers/UserProvider";
+import { getWeatherQueryKey } from "./providers/DataQueryProvider";
 import cloudsBgImgSrc from "./assets/images/background/clouds.png";
 import LocationSearch from "./features/location-search";
 import UnitsSwitch from "./features/units-switch";
@@ -10,14 +12,19 @@ import Hightlights from "./features/highlights";
 import "./App.scss";
 
 function App() {
-  const isFetchingWeather = useIsFetching([{ scope: "weather" }]);
+  const {
+    location: { current: currentLocation },
+  } = useUser();
+  const isFetchingCurrentWeather = useIsFetching([
+    getWeatherQueryKey(currentLocation.coords),
+  ]);
   useEffect(() => {
-    if (isFetchingWeather) {
+    if (isFetchingCurrentWeather) {
       toast.loading("Fetching weather…", { id: "weather_loading" });
     } else {
       toast.dismiss("weather_loading");
     }
-  }, [isFetchingWeather]);
+  }, [isFetchingCurrentWeather]);
 
   return (
     <>

@@ -9,10 +9,18 @@ import "./SearchList.scss";
 interface Props {
   searchQuery: string;
   onItemSelected: (location: CityLocation) => void;
+  onItemHoverStart: (location: CityLocation) => void;
+  onItemHoverEnd: (location: CityLocation) => void;
   isFetching: boolean;
 }
 
-function LocationSearch({ searchQuery, onItemSelected, isFetching }: Props) {
+function LocationSearch({
+  searchQuery,
+  onItemSelected,
+  onItemHoverStart,
+  onItemHoverEnd,
+  isFetching,
+}: Props) {
   const {
     location: { searchHistory },
   } = useUser();
@@ -37,6 +45,8 @@ function LocationSearch({ searchQuery, onItemSelected, isFetching }: Props) {
           key={`${location.coords.lat} ${location.coords.lon}`}
           location={location}
           onItemSelected={onItemSelected}
+          onItemHoverStart={onItemHoverStart}
+          onItemHoverEnd={onItemHoverEnd}
         />
       ))}
     </ul>

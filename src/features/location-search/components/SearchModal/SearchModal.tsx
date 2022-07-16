@@ -1,8 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import ReactModal from "react-modal";
 import { useIsFetching } from "react-query";
 import { debounce } from "lodash";
-import { useUserDispatch } from "../../../../providers/UserProvider";
 import { Location } from "../../../../types/weather";
 import { Button, Icon, Spinner } from "../../../../components";
 import SearchList from "../SearchList";
@@ -11,10 +10,18 @@ import "./SearchModal.scss";
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
+  onNewLocationSelected: (location: Location) => void;
+  onNewLocationHoverStart: (location: Location) => void;
+  onNewLocationHoverEnd: (location: Location) => void;
 }
 
-function SearchModal({ isOpen = false, onRequestClose }: Props) {
-  const userDispatch = useUserDispatch();
+function SearchModal({
+  isOpen = false,
+  onRequestClose,
+  onNewLocationSelected,
+  onNewLocationHoverStart,
+  onNewLocationHoverEnd,
+}: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const isFetchingCities = useIsFetching([{ scope: "cities" }]) > 0;
 
@@ -27,20 +34,17 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
     [],
   );
 
-  const handleRequestClose = useMemo(
-    () => () => {
-      setSearchQuery("");
-      onRequestClose();
-    },
-    [onRequestClose],
-  );
+  const handleRequestClose = useCallback(() => {
+    setSearchQuery("");
+    onRequestClose();
+  }, [onRequestClose]);
 
-  const handleSearchItemSelected = useMemo(
-    () => (location: Location) => {
+  const handleSearchItemSelected = useCallback(
+    (location: Location) => {
       handleRequestClose();
-      userDispatch({ type: "change-location", location });
+      onNewLocationSelected(location);
     },
-    [userDispatch, handleRequestClose],
+    [handleRequestClose, onNewLocationSelected],
   );
 
   return (
@@ -76,6 +80,8 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
       <SearchList
         searchQuery={searchQuery}
         onItemSelected={handleSearchItemSelected}
+        onItemHoverStart={onNewLocationHoverStart}
+        onItemHoverEnd={onNewLocationHoverEnd}
         isFetching={isFetchingCities}
       />
     </ReactModal>

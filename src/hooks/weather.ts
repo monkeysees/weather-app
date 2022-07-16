@@ -8,13 +8,15 @@ import {
   onlineManager,
 } from "react-query";
 import axios, { CanceledError } from "axios";
-import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
 import { useUser, useUserDispatch } from "../providers/UserProvider";
+import {
+  getWeatherQueryKey,
+  useWeatherQuery,
+} from "../providers/DataQueryProvider";
 import {
   Weather,
   CityLocation,
   Location,
-  Coordinates,
   TodayWeather,
 } from "../types/weather";
 import {
@@ -24,11 +26,6 @@ import {
   findLocationByCoords,
 } from "../utils/weather";
 
-function getWeatherQueryKey(coords: Coordinates) {
-  return [{ scope: "weather", coords }] as const;
-}
-type WeatherQueryKey = ReturnType<typeof getWeatherQueryKey>;
-
 function getCitiesQueryKey(searchQuery: string) {
   return [{ scope: "cities", searchQuery }] as const;
 }
@@ -36,17 +33,6 @@ type CitiesQueryKey = ReturnType<typeof getCitiesQueryKey>;
 
 function getErrorMsg(e: unknown) {
   return e instanceof Error ? e.message : "Something went wrong";
-}
-
-function fetchRawWeather(
-  queryClient: QueryClient,
-  { queryKey: [{ coords }] }: QueryFunctionContext<WeatherQueryKey>,
-) {
-  return axios
-    .get(
-      `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&hourly=temperature_2m,relativehumidity_2m,pressure_msl,weathercode,cloudcover,windspeed_10m,winddirection_10m&timeformat=unixtime&past_days=1`,
-    )
-    .then((res) => ({ ...res.data, coords }));
 }
 
 function fetchRawCities(
@@ -125,26 +111,7 @@ function useWeather(): Weather {
     units: { temperature: tempUnit },
   } = useUser();
   const userDispatch = useUserDispatch();
-  const currentWeatherQueryKey = getWeatherQueryKey(currentLocation.coords);
-  const queryInfo = useQuery<any, unknown, any, WeatherQueryKey>(
-    currentWeatherQueryKey,
-    (queryCtx) => fetchRawWeather(queryClient, queryCtx),
-    {
-      staleTime: minutesToMilliseconds(5),
-      cacheTime: hoursToMilliseconds(24),
-      refetchInterval: minutesToMilliseconds(4.5),
-      onError: (error) => {
-        if (error) {
-          const errorMsg =
-            error instanceof Error ? error.message : "Something went wrong";
-          toast.error(errorMsg, {
-            id: `weather_error_${currentLocation.coords.lat}-${currentLocation.coords.lon}`,
-          });
-          queryClient.cancelQueries(currentWeatherQueryKey);
-        }
-      },
-    },
-  );
+  const queryInfo = useWeatherQuery(currentLocation.coords);
 
   const prevLocation = searchHistory[1];
   const prevWeatherData = prevLocation

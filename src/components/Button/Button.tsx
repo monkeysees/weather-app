@@ -7,6 +7,8 @@ type ButtonType = React.ButtonHTMLAttributes<unknown>["type"];
 interface Props extends ChildrenProps {
   className?: string;
   onClick?: MouseEventHandler;
+  onHoverStart?: MouseEventHandler;
+  onHoverEnd?: MouseEventHandler;
   type?: ButtonType;
   aria?: React.AriaAttributes;
 }
@@ -14,6 +16,8 @@ function Button({
   className: propClassName,
   type,
   onClick,
+  onHoverStart,
+  onHoverEnd,
   aria,
   children,
 }: Props) {
@@ -22,8 +26,15 @@ function Button({
     : `base-button`;
   const btnType = type || "button";
   return (
-    // eslint-disable-next-line react/button-has-type
-    <button className={className} type={btnType} onClick={onClick} {...aria}>
+    <button
+      className={className}
+      // eslint-disable-next-line react/button-has-type
+      type={btnType}
+      onClick={onClick}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      {...aria}
+    >
       {children}
     </button>
   );
