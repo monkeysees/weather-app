@@ -68,13 +68,12 @@ function SearchModal({
         <div className="searchModal__inputField">
           <input
             aria-label="Search location"
-            placeholder="Enter location"
+            placeholder="Search location"
             className="searchModal__input"
             onChange={debouncedQueryChangeHandler}
           />
           <Icon type="search" className="searchModal__inputIcon" />
         </div>
-        <Button className="searchModal__inputBtn">Search</Button>
       </section>
       {isFetchingCities && <Spinner className="searchModal__spinner" />}
       <SearchList
