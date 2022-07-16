@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from "react";
 import ReactModal from "react-modal";
+import { useIsFetching } from "react-query";
 import { debounce } from "lodash";
 import { useUserDispatch } from "../../../../providers/UserProvider";
 import { Location } from "../../../../types/weather";
-import { Button, Icon } from "../../../../components";
+import { Button, Icon, Spinner } from "../../../../components";
 import SearchList from "../SearchList";
 import "./SearchModal.scss";
 
@@ -15,6 +16,7 @@ interface Props {
 function SearchModal({ isOpen = false, onRequestClose }: Props) {
   const userDispatch = useUserDispatch();
   const [searchQuery, setSearchQuery] = useState("");
+  const isFetchingCities = useIsFetching([{ scope: "cities" }]) > 0;
 
   function queryChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchQuery(e.target.value);
@@ -70,9 +72,11 @@ function SearchModal({ isOpen = false, onRequestClose }: Props) {
         </div>
         <Button className="searchModal__inputBtn">Search</Button>
       </section>
+      {isFetchingCities && <Spinner className="searchModal__spinner" />}
       <SearchList
         searchQuery={searchQuery}
         onItemSelected={handleSearchItemSelected}
+        isFetching={isFetchingCities}
       />
     </ReactModal>
   );

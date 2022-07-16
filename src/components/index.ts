@@ -4,5 +4,6 @@ import Ellipse from "./Ellipse";
 import Icon from "./Icon";
 import Button from "./Button";
 import WeatherImg from "./WeatherImg";
+import Spinner from "./Spinner";
 
-export { Section, Heading, Ellipse, Icon, Button, WeatherImg };
+export { Section, Heading, Ellipse, Icon, Button, WeatherImg, Spinner };

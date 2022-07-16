@@ -9,9 +9,10 @@ import "./SearchList.scss";
 interface Props {
   searchQuery: string;
   onItemSelected: (location: CityLocation) => void;
+  isFetching: boolean;
 }
 
-function LocationSearch({ searchQuery, onItemSelected }: Props) {
+function LocationSearch({ searchQuery, onItemSelected, isFetching }: Props) {
   const {
     location: { searchHistory },
   } = useUser();
@@ -29,8 +30,7 @@ function LocationSearch({ searchQuery, onItemSelected }: Props) {
   const currentSearchCities = useCities(searchQuery);
 
   const citiesToList = searchQuery ? currentSearchCities : citiesSearchHistory;
-
-  return (
+  const citiesToRender = (
     <ul className="searchItems">
       {citiesToList.map((location) => (
         <SearchItem
@@ -41,6 +41,9 @@ function LocationSearch({ searchQuery, onItemSelected }: Props) {
       ))}
     </ul>
   );
+  const fallbackToRender = isFetching ? null : <p>No results</p>;
+
+  return citiesToList.length ? citiesToRender : fallbackToRender;
 }
 
 export default LocationSearch;

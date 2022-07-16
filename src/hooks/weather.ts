@@ -7,7 +7,7 @@ import {
   QueryClient,
   onlineManager,
 } from "react-query";
-import axios from "axios";
+import axios, { CanceledError } from "axios";
 import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
 import { useUser, useUserDispatch } from "../providers/UserProvider";
 import {
@@ -34,6 +34,10 @@ function getCitiesQueryKey(searchQuery: string) {
 }
 type CitiesQueryKey = ReturnType<typeof getCitiesQueryKey>;
 
+function getErrorMsg(e: unknown) {
+  return e instanceof Error ? e.message : "Something went wrong";
+}
+
 function fetchRawWeather(
   queryClient: QueryClient,
   { queryKey: [{ coords }] }: QueryFunctionContext<WeatherQueryKey>,
@@ -59,24 +63,55 @@ function fetchRawCities(
     .get(`https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}`, {
       signal,
     })
-    .then((res) => extractCitiesData(res.data));
+    .then((res) => extractCitiesData(res.data))
+    .catch((e: unknown) => {
+      const isCancelError = e instanceof CanceledError;
+      if (!isCancelError) {
+        toast.error(getErrorMsg(e), {
+          id: `search-cities_error_${searchQuery}`,
+        });
+      }
+
+      throw e;
+    });
+}
+
+function handleNoInternet(queryClient: QueryClient) {
+  queryClient.cancelQueries();
+  toast.error("No internet connection", {
+    id: "no-internet",
+  });
 }
 
 function useCities(searchQuery: string) {
   const queryClient = useQueryClient();
+  const queryKey = getCitiesQueryKey(searchQuery);
   const queryInfo = useQuery<
     CityLocation[],
     unknown,
     CityLocation[],
     CitiesQueryKey
-  >(
-    getCitiesQueryKey(searchQuery),
-    (queryCtx) => fetchRawCities(queryClient, queryCtx),
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
+  >(queryKey, (queryCtx) => fetchRawCities(queryClient, queryCtx), {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    onError: (error) => {
+      if (error) {
+        const errorMsg =
+          error instanceof Error ? error.message : "Something went wrong";
+        toast.error(errorMsg, {
+          id: `search-cities_error`,
+        });
+        queryClient.cancelQueries(queryKey);
+      }
     },
-  );
+  });
+
+  const { failureCount, isLoading } = queryInfo;
+  useEffect(() => {
+    if (isLoading && !onlineManager.isOnline()) {
+      handleNoInternet(queryClient);
+    }
+  }, [queryClient, isLoading, failureCount]);
 
   const cities = queryInfo.status === "success" ? queryInfo.data : [];
 
@@ -135,10 +170,7 @@ function useWeather(): Weather {
         type: "change-location",
         location: findLocationByCoords(searchHistory, weatherData.coords),
       });
-      queryClient.cancelQueries();
-      toast.error("No internet connection", {
-        id: "no-internet",
-      });
+      handleNoInternet(queryClient);
     }
   }, [
     queryClient,
