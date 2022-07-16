@@ -7,6 +7,7 @@ import type {
   WeatherType,
   WindDirection,
   WeatherDayData,
+  Weather,
   TemperatureUnit,
   CityLocation,
 } from "../types/weather";
@@ -311,7 +312,7 @@ function mapRawUnit(unit: string) {
   }
 }
 
-function extractWeatherData(rawResponseData: any): WeatherDayData[] {
+function extractWeatherData(rawResponseData: any): Weather {
   const rawHourlyData = rawResponseData.hourly as { [key: string]: any[] };
   const unitsInfo = mapValues(
     mapKeys(
@@ -361,7 +362,7 @@ function extractWeatherData(rawResponseData: any): WeatherDayData[] {
     return daysDifference >= 0 && daysDifference <= 5;
   });
   const rawDataByDays = chunk(dataForLast5Days, 24);
-  return rawDataByDays.map((dayData) => ({
+  const daysData = rawDataByDays.map((dayData) => ({
     date: startOfDay(dayData[0].date),
     description:
       weatherDescriptionByCode[
@@ -399,9 +400,16 @@ function extractWeatherData(rawResponseData: any): WeatherDayData[] {
       direction: getMostFreqValue(map(dayData, "windDirection")),
     },
   })) as WeatherDayData[];
+
+  return {
+    coords: rawResponseData.coords,
+    daysData,
+  };
 }
 
-function extractCitiesData(rawResponseData: { results?: any[] }): CityLocation[] {
+function extractCitiesData(rawResponseData: {
+  results?: any[];
+}): CityLocation[] {
   if (!rawResponseData.results) {
     return [];
   }
@@ -438,10 +446,10 @@ function convertTemperature(
 }
 
 function convertWeatherTemperatures(
-  daysData: WeatherDayData[],
+  weatherData: Weather,
   newUnit: TemperatureUnit,
 ) {
-  return daysData.map((dayData) => {
+  const convertedDaysData = weatherData.daysData.map((dayData) => {
     const newDayData: WeatherDayData = { ...dayData };
     newDayData.temperature = {
       day: {
@@ -463,6 +471,10 @@ function convertWeatherTemperatures(
     };
     return newDayData;
   });
+  return {
+    ...weatherData,
+    daysData: convertedDaysData,
+  };
 }
 
 export {

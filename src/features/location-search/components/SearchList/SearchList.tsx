@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { isEqual, take, uniqWith } from "lodash";
 import { useUser } from "../../../../providers/UserProvider";
-import { useCities } from "../../../../providers/WeatherProvider";
+import { useCities } from "../../../../hooks/weather";
 import { CityLocation } from "../../../../types/weather";
 import SearchItem from "../SearchItem";
 import "./SearchList.scss";

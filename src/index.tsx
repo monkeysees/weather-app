@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import ReactModal from "react-modal";
+import DataQueryProvider from "./providers/DataQueryProvider";
 import { UserProvider } from "./providers/UserProvider";
-import { WeatherProvider } from "./providers/WeatherProvider";
 import App from "./App";
 import "./index.scss";
 
@@ -14,10 +14,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <UserProvider>
-      <WeatherProvider>
+    <DataQueryProvider>
+      <UserProvider>
         <App />
-      </WeatherProvider>
-    </UserProvider>
+      </UserProvider>
+    </DataQueryProvider>
   </React.StrictMode>,
 );

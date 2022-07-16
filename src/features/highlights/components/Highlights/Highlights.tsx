@@ -1,6 +1,6 @@
 import React from "react";
-import { useWeather } from "../../../../providers/WeatherProvider";
 import { Section, Heading } from "../../../../components";
+import { useTodayWeather } from "../../../../hooks/weather";
 import HighlightsCard from "../HighlightsCard";
 import HumidityCard from "../HighlightsCard/HumidityCard";
 import WindStatusCard from "../HighlightsCard/WindStatusCard";
@@ -29,13 +29,12 @@ const highlightsItems: {
 ];
 
 function Hightlights() {
-  const weatherData = useWeather();
-
-  if (!weatherData.length) {
+  const todayWeather = useTodayWeather();
+  if (!todayWeather.data) {
     return null;
   }
+  const todayWeatherData = todayWeather.data;
 
-  const todayHightlights = weatherData[0];
   return (
     <Section className="highlights">
       <Heading className="highlights__heading">Today’s highlights</Heading>
@@ -47,7 +46,7 @@ function Hightlights() {
                 <WindStatusCard
                   key={it.id}
                   title={it.title}
-                  windInfo={todayHightlights[it.id]}
+                  windInfo={todayWeatherData[it.id]}
                 />
               );
             case "humidity":
@@ -55,8 +54,8 @@ function Hightlights() {
                 <HumidityCard
                   key={it.id}
                   title={it.title}
-                  value={todayHightlights[it.id].value}
-                  unit={todayHightlights[it.id].unit}
+                  value={todayWeatherData[it.id].value}
+                  unit={todayWeatherData[it.id].unit}
                 />
               );
             default:
@@ -64,8 +63,8 @@ function Hightlights() {
                 <HighlightsCard
                   key={it.id}
                   title={it.title}
-                  value={todayHightlights[it.id].value}
-                  unit={todayHightlights[it.id].unit}
+                  value={todayWeatherData[it.id].value}
+                  unit={todayWeatherData[it.id].unit}
                 />
               );
           }

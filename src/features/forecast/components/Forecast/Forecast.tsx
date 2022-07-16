@@ -1,11 +1,11 @@
 import React from "react";
-import { useWeather } from "../../../../providers/WeatherProvider";
+import { useWeather } from "../../../../hooks/weather";
 import ForecastCard from "../ForecastCard";
 import { WeatherDayData } from "../../../../types/weather";
 import "./Forecast.scss";
 
 function Forecast() {
-  const weatherDataWithoutToday = useWeather().slice(1);
+  const weatherDataWithoutToday = useWeather().daysData.slice(1);
   return (
     <section className="forecast">
       {(weatherDataWithoutToday as WeatherDayData[]).map((dayData) => (

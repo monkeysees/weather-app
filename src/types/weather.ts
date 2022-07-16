@@ -91,6 +91,16 @@ interface WeatherDayData {
   wind: WindDataPoint;
 }
 
+interface Weather {
+  coords: Coordinates;
+  daysData: WeatherDayData[];
+}
+
+interface TodayWeather {
+  coords: Coordinates;
+  data?: WeatherDayData;
+}
+
 interface BaseLocation {
   coords: { lat: number; lon: number };
 }
@@ -112,6 +122,8 @@ export type {
   WeatherCode,
   WeatherType,
   WeatherDayData,
+  Weather,
+  TodayWeather,
   Coordinates,
   Location,
   CurrentLocation,

@@ -1,26 +1,22 @@
 import React from "react";
 import { Section, Heading, Icon, WeatherImg } from "../../../../components";
-import { useUser } from "../../../../providers/UserProvider";
-import { useWeather } from "../../../../providers/WeatherProvider";
+import { useTodayWeather, useWeatherLocation } from "../../../../hooks/weather";
 import { formatDate } from "../../../../utils/datetime";
 import "./CurrentWeather.scss";
 
 function CurrentWeather() {
-  const weatherData = useWeather();
-  const { location } = useUser();
-
-  if (!weatherData.length) {
+  const location = useWeatherLocation();
+  const todayWeather = useTodayWeather();
+  if (!todayWeather.data) {
     return null;
   }
-
   const {
     temperature: { day: dayTemperature },
     description: weatherDescription,
     date,
-  } = weatherData[0];
+  } = todayWeather.data;
 
-  const cityToRender =
-    "city" in location.current ? location.current.city : "Current location";
+  const cityToRender = "city" in location ? location.city : "Current location";
 
   return (
     <Section className="currentWeather">
