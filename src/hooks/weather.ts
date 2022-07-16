@@ -1,13 +1,15 @@
+import { useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 import {
   useQueryClient,
   useQuery,
   QueryFunctionContext,
   QueryClient,
+  onlineManager,
 } from "react-query";
 import axios from "axios";
 import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
-import { find, isEqual } from "lodash";
-import { useUser } from "../providers/UserProvider";
+import { useUser, useUserDispatch } from "../providers/UserProvider";
 import {
   Weather,
   CityLocation,
@@ -19,6 +21,7 @@ import {
   convertWeatherTemperatures,
   extractCitiesData,
   extractWeatherData,
+  findLocationByCoords,
 } from "../utils/weather";
 
 function getWeatherQueryKey(coords: Coordinates) {
@@ -63,7 +66,7 @@ function useCities(searchQuery: string) {
   const queryClient = useQueryClient();
   const queryInfo = useQuery<
     CityLocation[],
-    Error,
+    unknown,
     CityLocation[],
     CitiesQueryKey
   >(
@@ -86,13 +89,25 @@ function useWeather(): Weather {
     location: { current: currentLocation, searchHistory },
     units: { temperature: tempUnit },
   } = useUser();
-  const queryInfo = useQuery<any, Error, any, WeatherQueryKey>(
-    getWeatherQueryKey(currentLocation.coords),
+  const userDispatch = useUserDispatch();
+  const currentWeatherQueryKey = getWeatherQueryKey(currentLocation.coords);
+  const queryInfo = useQuery<any, unknown, any, WeatherQueryKey>(
+    currentWeatherQueryKey,
     (queryCtx) => fetchRawWeather(queryClient, queryCtx),
     {
       staleTime: minutesToMilliseconds(5),
       cacheTime: hoursToMilliseconds(24),
       refetchInterval: minutesToMilliseconds(4.5),
+      onError: (error) => {
+        if (error) {
+          const errorMsg =
+            error instanceof Error ? error.message : "Something went wrong";
+          toast.error(errorMsg, {
+            id: `weather_error_${currentLocation.coords.lat}-${currentLocation.coords.lon}`,
+          });
+          queryClient.cancelQueries(currentWeatherQueryKey);
+        }
+      },
     },
   );
 
@@ -104,9 +119,37 @@ function useWeather(): Weather {
   const rawWeather =
     queryInfo.status === "success" ? queryInfo.data : prevWeatherData;
 
-  return rawWeather
-    ? convertWeatherTemperatures(extractWeatherData(rawWeather), tempUnit)
-    : { coords: currentLocation.coords, daysData: [] };
+  const weatherData: Weather = useMemo(
+    () =>
+      rawWeather
+        ? convertWeatherTemperatures(extractWeatherData(rawWeather), tempUnit)
+        : { coords: currentLocation.coords, daysData: [] },
+    [currentLocation.coords, rawWeather, tempUnit],
+  );
+
+  const { failureCount, isLoading } = queryInfo;
+
+  useEffect(() => {
+    if (isLoading && !onlineManager.isOnline()) {
+      userDispatch({
+        type: "change-location",
+        location: findLocationByCoords(searchHistory, weatherData.coords),
+      });
+      queryClient.cancelQueries();
+      toast.error("No internet connection", {
+        id: "no-internet",
+      });
+    }
+  }, [
+    queryClient,
+    isLoading,
+    failureCount,
+    userDispatch,
+    searchHistory,
+    weatherData,
+  ]);
+
+  return weatherData;
 }
 
 function useTodayWeather(): TodayWeather {
@@ -122,15 +165,7 @@ function useWeatherLocation(): Location {
   const {
     location: { searchHistory },
   } = useUser();
-  const weatherLocation = find(searchHistory, ({ coords }) =>
-    isEqual(coords, weatherCoords),
-  );
-  return (
-    weatherLocation || {
-      city: "Unknown",
-      coords: weatherCoords,
-    }
-  );
+  return findLocationByCoords(searchHistory, weatherCoords);
 }
 
 export { useWeather, useTodayWeather, useWeatherLocation, useCities };

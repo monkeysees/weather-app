@@ -1,4 +1,14 @@
-import { zipWith, chunk, meanBy, map, pick, mapKeys, mapValues } from "lodash";
+import {
+  zipWith,
+  chunk,
+  meanBy,
+  map,
+  pick,
+  mapKeys,
+  mapValues,
+  find,
+  isEqual,
+} from "lodash";
 import { startOfToday, differenceInCalendarDays, startOfDay } from "date-fns";
 import { getMostFreqValue } from "./misc";
 import { assertUnreachable } from "./types";
@@ -9,7 +19,9 @@ import type {
   WeatherDayData,
   Weather,
   TemperatureUnit,
+  Location,
   CityLocation,
+  Coordinates,
 } from "../types/weather";
 
 const weatherDescriptionByCode: {
@@ -477,9 +489,23 @@ function convertWeatherTemperatures(
   };
 }
 
+function findLocationByCoords(
+  locations: Location[],
+  coords: Coordinates,
+): Location {
+  const weatherLocation = find(locations, (loc) => isEqual(coords, loc.coords));
+  return (
+    weatherLocation || {
+      city: "Unknown",
+      coords,
+    }
+  );
+}
+
 export {
   extractCitiesData,
   extractWeatherData,
   getDegreeForDirection,
   convertWeatherTemperatures,
+  findLocationByCoords,
 };
