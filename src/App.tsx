@@ -17,9 +17,10 @@ function App() {
   const {
     location: { current: currentLocation },
   } = useUser();
-  const isFetchingCurrentWeather = useIsFetching([
+  const isFetchingCurrentWeather = useIsFetching(
     getWeatherQueryKey(currentLocation.coords),
-  ]);
+  );
+
   useEffect(() => {
     if (isFetchingCurrentWeather) {
       toast.loading("Fetching weather…", { id: "weather_loading" });
