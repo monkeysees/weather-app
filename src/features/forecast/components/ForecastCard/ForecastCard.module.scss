@@ -1,0 +1,31 @@
+.card {
+  padding: 1.8rem 2rem;
+  background-color: var(--color-background-medium);
+  color: var(--color-light);
+  display: grid;
+  grid-auto-rows: max-content;
+  justify-content: center;
+  place-items: center;
+}
+
+.heading {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.image {
+  width: 6rem;
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  margin-bottom: 3rem;
+}
+
+.temperatures {
+  display: flex;
+  column-gap: 1.6rem;
+}
+
+.temperature_night {
+  color: var(--color-grey-light);
+}

@@ -1,3 +1,4 @@
 {
-  "css.customData": ["./.vscode/custom.css-data.json"]
+  "css.customData": ["./.vscode/custom.css-data.json"],
+  "scss.lint.validProperties": ["composes"]
 }

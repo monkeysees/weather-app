@@ -3,7 +3,7 @@ import { isTomorrow } from "date-fns";
 import { Section, Heading, WeatherImg } from "../../../../components";
 import { WeatherDayData } from "../../../../types/weather";
 import { formatDate } from "../../../../utils/datetime";
-import "./ForecastCard.scss";
+import styles from "./ForecastCard.module.scss";
 
 interface Props {
   dayData: WeatherDayData;
@@ -14,19 +14,19 @@ function ForecastCard({ dayData: { date, description, temperature } }: Props) {
   const weatherType = description.type;
   const weatherDescriptionDetails = description.details;
   return (
-    <Section className="forecastCard">
-      <Heading className="forecastCard__heading">{dayTitle}</Heading>
+    <Section className={styles.card}>
+      <Heading className={styles.heading}>{dayTitle}</Heading>
       <WeatherImg
         type={weatherType}
         alt={weatherDescriptionDetails}
-        className="forecastCard__image"
+        className={styles.image}
       />
-      <div className="forecastCard__temperatures">
-        <span className="forecastCard__temperature forecastCard__temperature--day">
+      <div className={styles.temperatures}>
+        <span>
           {temperature.day.value}
           {temperature.day.unit}
         </span>
-        <span className="forecastCard__temperature forecastCard__temperature--night">
+        <span className={styles.temperature_night}>
           {temperature.night.value}
           {temperature.night.unit}
         </span>

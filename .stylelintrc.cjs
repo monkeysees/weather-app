@@ -3,7 +3,7 @@ const namingPattern = "^([a-zA-Z][a-zA-Z0-9]*)([-_]{0,2}[a-zA-Z0-9]+)*$";
 module.exports = {
   extends: [
     "stylelint-config-standard-scss",
-    "stylelint-config-recommended-scss",
+    "stylelint-config-css-modules",
     "stylelint-config-prettier-scss",
   ],
   overrides: [

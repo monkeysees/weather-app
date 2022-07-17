@@ -1,8 +1,8 @@
 import React from "react";
-import { Ellipse, Button } from "../../../../components";
 import { useUser, useUserDispatch } from "../../../../providers/UserProvider";
-import "./UnitsSwitch.scss";
+import { Ellipse, Button } from "../../../../components";
 import { TemperatureUnit } from "../../../../types/weather";
+import styles from "./UnitsSwitch.module.scss";
 
 const temperatureUnits: TemperatureUnit[] = ["°C", "°F"];
 
@@ -10,9 +10,7 @@ function getClassName(
   currentUnit: TemperatureUnit,
   chosenUnit: TemperatureUnit,
 ) {
-  return currentUnit === chosenUnit
-    ? "unitsSwitch unitsSwitch--active"
-    : "unitsSwitch";
+  return currentUnit === chosenUnit ? styles.switch_active : styles.switch;
 }
 
 function UnitsSwitch() {
@@ -26,17 +24,17 @@ function UnitsSwitch() {
   }
 
   return (
-    <div className="unitsSwitches">
+    <div className={styles.wrapper}>
       {temperatureUnits.map((tempUnit) => (
         <Ellipse
           key={tempUnit}
           className={getClassName(userTempUnit, tempUnit)}
         >
           <Button
-            className="unitsSwitch__btn"
+            className={styles.button}
             onClick={() => handleTempUnitSwitch(tempUnit)}
           >
-            <span className="unitsSwitch__unit">{tempUnit}</span>
+            <span className={styles.unit}>{tempUnit}</span>
           </Button>
         </Ellipse>
       ))}

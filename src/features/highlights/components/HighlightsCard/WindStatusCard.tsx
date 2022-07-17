@@ -3,7 +3,7 @@ import { Ellipse, Icon } from "../../../../components";
 import HighlightsCard from "./HighlightsCard";
 import type { WindDataPoint } from "../../../../types/weather";
 import { getDegreeForDirection } from "../../../../utils/weather";
-import "./WindStatusCard.scss";
+import styles from "./WindStatusCard.module.scss";
 
 interface Props {
   title: string;
@@ -13,18 +13,18 @@ interface Props {
 function WindStatusCard({ title, windInfo: { speed, direction } }: Props) {
   return (
     <HighlightsCard title={title} value={speed.value} unit={speed.unit}>
-      <section className="windStatusCardDirection">
-        <Ellipse className="windStatusCardDirection__iconWrapper">
+      <section className={styles.direction}>
+        <Ellipse className={styles.iconWrapper}>
           <Icon
             type="direction"
-            className="windStatusCardDirection__icon"
+            className={styles.icon}
             style={{
               transform: `rotate(${getDegreeForDirection(direction)}deg)`,
             }}
           />
         </Ellipse>
 
-        <span className="windStatusCardDirection__text">{direction}</span>
+        <span className={styles.text}>{direction}</span>
       </section>
     </HighlightsCard>
   );

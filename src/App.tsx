@@ -9,7 +9,7 @@ import UnitsSwitch from "./features/units-switch";
 import CurrentWeather from "./features/current-weather";
 import Forecast from "./features/forecast";
 import Hightlights from "./features/highlights";
-import "./App.scss";
+import styles from "./App.module.scss";
 
 function App() {
   const {
@@ -29,23 +29,23 @@ function App() {
   return (
     <>
       <Toaster />
-      <main className="app">
-        <div className="app__locationSearch">
+      <main className={styles.app}>
+        <div className={styles.locationSearch}>
           <LocationSearch />
         </div>
-        <div className="app__unitsSwitch">
+        <div className={styles.unitsSwitch}>
           <UnitsSwitch />
         </div>
-        <div className="app__main">
-          <div className="app__currentWeather">
+        <div className={styles.main}>
+          <div className={styles.currentWeather}>
             <img
               src={cloudsBgImgSrc}
               alt=""
-              className="app__currentWeatherBg"
+              className={styles.currentWeatherBg}
             />
             <CurrentWeather />
           </div>
-          <div className="app__forecast-with-highlights">
+          <div className={styles.forecastAndHighlights}>
             <Forecast />
             <Hightlights />
           </div>

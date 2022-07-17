@@ -2,7 +2,7 @@ import React from "react";
 import { Section, Heading, Icon, WeatherImg } from "../../../../components";
 import { useTodayWeather, useWeatherLocation } from "../../../../hooks/weather";
 import { formatDate } from "../../../../utils/datetime";
-import "./CurrentWeather.scss";
+import styles from "./CurrentWeather.module.scss";
 
 function CurrentWeather() {
   const location = useWeatherLocation();
@@ -19,27 +19,25 @@ function CurrentWeather() {
   const cityToRender = "city" in location ? location.city : "Current location";
 
   return (
-    <Section className="currentWeather">
+    <Section className={styles.wrapper}>
       <WeatherImg
         type={weatherDescription.type}
         alt={weatherDescription.details}
-        className="currentWeather__image"
+        className={styles.image}
       />
-      <p className="currentWeather__temperature">
-        <span className="currentWeather__temperatureValue">
+      <p className={styles.temperature}>
+        <span className={styles.temperature__value}>
           {dayTemperature.value}
         </span>
-        <span className="currentWeather__temperatureUnit">
-          {dayTemperature.unit}
-        </span>
+        <span className={styles.temperature__unit}>{dayTemperature.unit}</span>
       </p>
-      <p className="currentWeather__description">{weatherDescription.title}</p>
-      <Heading className="currentWeather__heading">
+      <p className={styles.description}>{weatherDescription.title}</p>
+      <Heading className={styles.heading}>
         Today <span>•</span> {formatDate(date)}
       </Heading>
-      <p className="currentWeather__location">
-        <Icon type="location" className="currentWeather__locationIcon" />
-        <span className="currentWeather__locationPlace">{cityToRender}</span>
+      <p className={styles.location}>
+        <Icon type="location" className={styles.location__icon} />
+        <span className={styles.location__place}>{cityToRender}</span>
       </p>
     </Section>
   );

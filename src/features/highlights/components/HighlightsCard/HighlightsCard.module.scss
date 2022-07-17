@@ -1,0 +1,30 @@
+.card {
+  padding: 2rem 5rem;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-auto-rows: max-content;
+  row-gap: 0.6rem;
+  justify-content: center;
+  justify-items: center;
+  align-items: start;
+  background-color: var(--color-background-medium);
+}
+
+.heading {
+  text-transform: capitalize;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+}
+
+.value {
+  font-size: 6.4rem;
+  font-weight: 700;
+}
+
+.unit {
+  font-size: 3.6rem;
+}

@@ -1,0 +1,45 @@
+.app {
+  --forecasts-padding-inline: 13rem;
+
+  min-height: 100vh;
+  background-color: var(--color-background-dark);
+}
+
+.locationSearch {
+  position: absolute;
+  z-index: 1;
+  top: 4.2rem;
+  left: 3%;
+  width: 27%;
+}
+
+.unitsSwitch {
+  position: absolute;
+  z-index: 1;
+  top: 4.2rem;
+  right: var(--forecasts-padding-inline);
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 33% 67%;
+}
+
+.currentWeather {
+  padding: 19rem 13rem 5rem;
+  background-color: var(--color-background-medium);
+}
+
+.currentWeatherBg {
+  position: absolute;
+  top: 10rem;
+  left: -12rem;
+  width: 70rem;
+  filter: opacity(0.05);
+}
+
+.forecastAndHighlights {
+  padding: 15rem var(--forecasts-padding-inline);
+  background-color: var(--color-background-dark);
+  z-index: 0;
+}

@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  column-gap: 1.2rem;
+}
+
+.switch {
+  width: 4rem;
+  aspect-ratio: 1;
+  background-color: var(--color-background-medium-light);
+  color: var(--color-light);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.switch_active {
+  composes: switch;
+  background-color: var(--color-light);
+  color: var(--color-dark);
+}
+
+.button {
+  width: 100%;
+  height: 100%;
+}
+
+.unit {
+  margin-top: 1px;
+  margin-left: -1px;
+}

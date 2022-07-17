@@ -9,7 +9,7 @@ import { useUser, useUserDispatch } from "../../../../providers/UserProvider";
 import { Button, Ellipse, Icon } from "../../../../components";
 import SearchModal from "../SearchModal";
 import { Location } from "../../../../types/weather";
-import "./LocationSearch.scss";
+import styles from "./LocationSearch.module.scss";
 
 function getGeolocationErrorMsg(e: GeolocationPositionError) {
   switch (e.code) {
@@ -125,7 +125,7 @@ function LocationSearch() {
   }, [handleNewLocationHoverEnd]);
 
   return (
-    <section className="locationSearch">
+    <section className={styles.wrapper}>
       <SearchModal
         isOpen={isShowModal}
         onRequestClose={() => setIsShowModal(false)}
@@ -134,19 +134,22 @@ function LocationSearch() {
         onNewLocationHoverEnd={handleNewLocationHoverEnd}
       />
       <Button
-        className="locationSearch__search"
+        className={styles.searchBtn}
         onClick={() => setIsShowModal(true)}
       >
         Search for places
       </Button>
-      <Ellipse className="locationSearch__currentLocation">
+      <Ellipse className={styles.currentLocation}>
         <Button
-          className="locationSearch__currentLocation__btn"
+          className={styles.currentLocation__btn}
           onClick={handleCurrentLocationSelected}
           onHoverStart={handleCurrentLocationHoverStart}
           onHoverEnd={handleCurrentLocationHoverEnd}
         >
-          <Icon type="gps" className="locationSearch__currentLocation__icon" />
+          <Icon
+            type="gps"
+            className={styles.currentLocation__icon}
+          />
         </Button>
       </Ellipse>
     </section>

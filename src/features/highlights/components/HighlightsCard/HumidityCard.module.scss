@@ -1,0 +1,33 @@
+.bar {
+  --border-radius: 10rem;
+
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-grey-light);
+  display: grid;
+  row-gap: 0.2rem;
+}
+
+.dividers {
+  display: flex;
+  justify-content: space-between;
+}
+
+.full {
+  position: relative;
+  height: 0.8rem;
+  border-radius: var(--border-radius);
+  background-color: var(--color-light);
+}
+
+.inner {
+  position: absolute;
+  height: 100%;
+  border-radius: var(--border-radius);
+  background-color: rgba(255 236 101 / 100%);
+}
+
+.percent {
+  text-align: right;
+}

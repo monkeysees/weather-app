@@ -4,7 +4,7 @@ import { useUser } from "../../../../providers/UserProvider";
 import { useCities } from "../../../../hooks/weather";
 import { CityLocation } from "../../../../types/weather";
 import SearchItem from "../SearchItem";
-import "./SearchList.scss";
+import styles from "./SearchList.module.scss";
 
 interface Props {
   searchQuery: string;
@@ -39,7 +39,7 @@ function LocationSearch({
 
   const citiesToList = searchQuery ? currentSearchCities : citiesSearchHistory;
   const citiesToRender = (
-    <ul className="searchItems">
+    <ul className={styles.wrapper}>
       {citiesToList.map((location) => (
         <SearchItem
           key={`${location.coords.lat} ${location.coords.lon}`}

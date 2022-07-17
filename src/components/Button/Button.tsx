@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from "react";
 import { ChildrenProps } from "../../types/props";
-import "./Button.scss";
+import styles from "./Button.module.scss";
 
 type ButtonType = React.ButtonHTMLAttributes<unknown>["type"];
 
@@ -22,8 +22,8 @@ function Button({
   children,
 }: Props) {
   const className = propClassName
-    ? `base-button ${propClassName}`
-    : `base-button`;
+    ? `${styles.button} ${propClassName}`
+    : `${styles.button}`;
   const btnType = type || "button";
   return (
     <button

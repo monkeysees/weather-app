@@ -5,7 +5,7 @@ import { debounce } from "lodash";
 import { Location } from "../../../../types/weather";
 import { Button, Icon, Spinner } from "../../../../components";
 import SearchList from "../SearchList";
-import "./SearchModal.scss";
+import styles from "./SearchModal.module.scss";
 
 interface Props {
   isOpen: boolean;
@@ -55,27 +55,27 @@ function SearchModal({
       style={{
         overlay: { backgroundColor: "none", zIndex: 1, width: "33%" },
       }}
-      className="searchModal"
+      className={styles.wrapper}
     >
       <Button
-        className="searchModal__closeBtn"
+        className={styles.closeBtn}
         onClick={onRequestClose}
         aria={{ "aria-label": "Close modal" }}
       >
-        <Icon type="close" className="searchModal__closeIcon" />
+        <Icon type="close" className={styles.closeIcon} />
       </Button>
-      <section className="searchModal__inputSection">
-        <div className="searchModal__inputField">
+      <section className={styles.inputSection}>
+        <div className={styles.inputSection__field}>
           <input
             aria-label="Search location"
             placeholder="Search location"
-            className="searchModal__input"
+            className={styles.inputSection__input}
             onChange={debouncedQueryChangeHandler}
           />
-          <Icon type="search" className="searchModal__inputIcon" />
+          <Icon type="search" className={styles.inputSection__icon} />
         </div>
       </section>
-      {isFetchingCities && <Spinner className="searchModal__spinner" />}
+      {isFetchingCities && <Spinner className={styles.spinner} />}
       <SearchList
         searchQuery={searchQuery}
         onItemSelected={handleSearchItemSelected}

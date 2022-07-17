@@ -4,7 +4,7 @@ import { useTodayWeather } from "../../../../hooks/weather";
 import HighlightsCard from "../HighlightsCard";
 import HumidityCard from "../HighlightsCard/HumidityCard";
 import WindStatusCard from "../HighlightsCard/WindStatusCard";
-import "./Highlights.scss";
+import styles from "./Highlights.module.scss";
 
 const highlightsItems: {
   id: "wind" | "humidity" | "cloudiness" | "pressure";
@@ -36,9 +36,9 @@ function Hightlights() {
   const todayWeatherData = todayWeather.data;
 
   return (
-    <Section className="highlights">
-      <Heading className="highlights__heading">Today’s highlights</Heading>
-      <section className="highlights__cards">
+    <Section>
+      <Heading className={styles.heading}>Today’s highlights</Heading>
+      <section className={styles.cards}>
         {highlightsItems.map((it) => {
           switch (it.id) {
             case "wind":

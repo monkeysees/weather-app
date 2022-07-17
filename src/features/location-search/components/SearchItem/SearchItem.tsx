@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Button, Icon } from "../../../../components";
 import { CityLocation } from "../../../../types/weather";
-import "./SearchItem.scss";
+import styles from "./SearchItem.module.scss";
 
 interface Props {
   location: CityLocation;
@@ -36,19 +36,19 @@ function SearchItem({
   );
 
   return (
-    <li className="searchItem">
+    <li>
       <Button
-        className="searchItem__btn"
+        className={styles.btn}
         onClick={handleItemSelected}
         onHoverStart={handleItemHoverStart}
         onHoverEnd={handleItemHoverEnd}
       >
-        <span className="searchItem__name">
+        <span className={styles.name}>
           {city}
           {adminZoneToRender}
           {countryToRender}
         </span>
-        <Icon type="arrow-right" className="searchItem__icon" />
+        <Icon type="arrow-right" className={styles.icon} />
       </Button>
     </li>
   );
