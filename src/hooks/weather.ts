@@ -10,8 +10,10 @@ import {
 import axios, { CanceledError } from "axios";
 import { useUser, useUserDispatch } from "../providers/UserProvider";
 import {
+  CitiesResponse,
   getWeatherQueryKey,
   useWeatherQuery,
+  WeatherResponseWithCoords,
 } from "../providers/DataQueryProvider";
 import {
   Weather,
@@ -46,9 +48,12 @@ function fetchRawCities(
   }
 
   return axios
-    .get(`https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}`, {
-      signal,
-    })
+    .get<CitiesResponse>(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}`,
+      {
+        signal,
+      },
+    )
     .then((res) => extractCitiesData(res.data))
     .catch((e: unknown) => {
       const isCancelError = e instanceof CanceledError;
@@ -115,7 +120,9 @@ function useWeather(): Weather {
 
   const prevLocation = searchHistory[1];
   const prevWeatherData = prevLocation
-    ? queryClient.getQueryData<any>(getWeatherQueryKey(prevLocation.coords))
+    ? queryClient.getQueryData<WeatherResponseWithCoords>(
+        getWeatherQueryKey(prevLocation.coords),
+      )
     : undefined;
 
   const rawWeather =

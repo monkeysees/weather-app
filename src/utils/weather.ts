@@ -23,6 +23,10 @@ import type {
   CityLocation,
   Coordinates,
 } from "../types/weather";
+import {
+  CitiesResponse,
+  WeatherResponseWithCoords,
+} from "../providers/DataQueryProvider";
 
 const weatherDescriptionByCode: {
   [key in WeatherCode]: {
@@ -324,8 +328,10 @@ function mapRawUnit(unit: string) {
   }
 }
 
-function extractWeatherData(rawResponseData: any): Weather {
-  const rawHourlyData = rawResponseData.hourly as { [key: string]: any[] };
+function extractWeatherData(
+  rawResponseData: WeatherResponseWithCoords,
+): Weather {
+  const rawHourlyData = rawResponseData.hourly;
   const unitsInfo = mapValues(
     mapKeys(
       pick(rawResponseData.hourly_units, [
@@ -374,7 +380,7 @@ function extractWeatherData(rawResponseData: any): Weather {
     return daysDifference >= 0 && daysDifference <= 5;
   });
   const rawDataByDays = chunk(dataForLast5Days, 24);
-  const daysData = rawDataByDays.map((dayData) => ({
+  const daysData: WeatherDayData[] = rawDataByDays.map((dayData) => ({
     date: startOfDay(dayData[0].date),
     description:
       weatherDescriptionByCode[
@@ -383,35 +389,37 @@ function extractWeatherData(rawResponseData: any): Weather {
     temperature: {
       day: {
         value: Math.round(meanBy(dayData.slice(12, 19), "temperature")),
-        unit: unitsInfo.temperature,
+        unit: unitsInfo.temperature as TemperatureUnit,
       },
       night: {
         value: Math.round(
           meanBy(dayData.slice(0, 7).concat(dayData.slice(19)), "temperature"),
         ),
-        unit: unitsInfo.temperature,
+        unit: unitsInfo.temperature as TemperatureUnit,
       },
     },
     pressure: {
       value: Math.round(meanBy(dayData, "pressure")),
-      unit: unitsInfo.pressure,
+      unit: unitsInfo.pressure as "mb",
     },
     humidity: {
       value: Math.round(meanBy(dayData, "humidity")),
-      unit: unitsInfo.humidity,
+      unit: unitsInfo.humidity as "%",
     },
     cloudiness: {
       value: Math.round(meanBy(dayData, "cloudiness")),
-      unit: unitsInfo.cloudiness,
+      unit: unitsInfo.cloudiness as "%",
     },
     wind: {
       speed: {
         value: Math.round(meanBy(dayData, "windSpeed")),
-        unit: unitsInfo.windSpeed,
+        unit: unitsInfo.windSpeed as "km/h",
       },
-      direction: getMostFreqValue(map(dayData, "windDirection")),
+      direction: getMostFreqValue(
+        map(dayData, "windDirection"),
+      ) as WindDirection,
     },
-  })) as WeatherDayData[];
+  }));
 
   return {
     coords: rawResponseData.coords,
@@ -419,9 +427,7 @@ function extractWeatherData(rawResponseData: any): Weather {
   };
 }
 
-function extractCitiesData(rawResponseData: {
-  results?: any[];
-}): CityLocation[] {
+function extractCitiesData(rawResponseData: CitiesResponse): CityLocation[] {
   if (!rawResponseData.results) {
     return [];
   }

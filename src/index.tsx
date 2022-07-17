@@ -7,10 +7,14 @@ import App from "./App";
 import "./index.scss";
 
 const rootElementId = "root";
+const rootElement = document.getElementById(rootElementId);
+
+if (!rootElement) {
+  throw Error(`Root element with id ${rootElementId} is not provided!`);
+}
+
+const root = ReactDOM.createRoot(rootElement);
 ReactModal.setAppElement(`#${rootElementId}`);
-const root = ReactDOM.createRoot(
-  document.getElementById(rootElementId) as HTMLElement,
-);
 
 root.render(
   <React.StrictMode>
