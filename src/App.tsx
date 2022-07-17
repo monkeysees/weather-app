@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useIsFetching } from "react-query";
+import React, { useEffect, useState } from "react";
+import { useIsFetching, useQueryClient } from "react-query";
 import { Toaster, toast } from "react-hot-toast";
 import { useUser } from "./providers/UserProvider";
 import { getWeatherQueryKey } from "./providers/DataQueryProvider";
@@ -10,24 +10,39 @@ import CurrentWeather from "./features/current-weather";
 import Forecast from "./features/forecast";
 import Hightlights from "./features/highlights";
 import cloudsBgImgSrc from "./assets/images/background/clouds.png";
-import styles from "./App.module.scss";
 import { registerWindowResizeHandler } from "./utils/dom";
+import styles from "./App.module.scss";
 
 function App() {
+  const queryClient = useQueryClient();
   const {
     location: { current: currentLocation },
   } = useUser();
-  const isFetchingCurrentWeather = useIsFetching(
-    getWeatherQueryKey(currentLocation.coords),
-  );
+  const currentWeatherQueryKey = getWeatherQueryKey(currentLocation.coords);
+  const isFetchingCurrentWeather = useIsFetching(currentWeatherQueryKey);
+  const [isFetchedFirstWeather, setIsFetchedFirstWeather] = useState(false);
 
   useEffect(() => {
     if (isFetchingCurrentWeather) {
       toast.loading("Fetching weather…", { id: "weather_loading" });
     } else {
       toast.dismiss("weather_loading");
+
+      if (!isFetchedFirstWeather) {
+        const currentWeatherQueryStatus = queryClient.getQueryState(
+          currentWeatherQueryKey,
+        )?.status;
+        if (currentWeatherQueryStatus === "success") {
+          setIsFetchedFirstWeather(true);
+        }
+      }
     }
-  }, [isFetchingCurrentWeather]);
+  }, [
+    queryClient,
+    currentWeatherQueryKey,
+    isFetchedFirstWeather,
+    isFetchingCurrentWeather,
+  ]);
   useEffect(() => {
     registerWindowResizeHandler();
   }, []);
@@ -47,7 +62,13 @@ function App() {
           </ErrorBoundary>
         </div>
         <div className={styles.main}>
-          <div className={styles.currentWeather}>
+          <div
+            className={
+              isFetchedFirstWeather
+                ? styles.currentWeather
+                : styles.currentWeather_fetching
+            }
+          >
             <img
               src={cloudsBgImgSrc}
               alt=""

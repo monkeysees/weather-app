@@ -16,5 +16,6 @@ module.exports = {
     "selector-class-pattern": namingPattern,
     "custom-property-pattern": namingPattern,
     "scss/dollar-variable-pattern": namingPattern,
+    "value-keyword-case": ["lower", { ignoreProperties: ["composes"] }],
   },
 };

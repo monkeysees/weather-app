@@ -3,7 +3,6 @@
 .app {
   --forecasts-padding-inline: 9vw;
 
-  height: 100%;
   background-color: var(--color-background-dark);
 }
 
@@ -31,7 +30,8 @@
 }
 
 .main {
-  height: 100%;
+  // min-height property is used to make the site's height to always be at least 100vh
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 33% 67%;
 
@@ -41,15 +41,19 @@
 }
 
 .currentWeather {
-  height: 100%;
   padding: 19rem 9vw 5rem;
   background-color: var(--color-background-medium);
 
   @include bootstrap.respond-to-screen(medium) {
-    min-height: 90rem;
-    height: max-content;
     padding-top: 13rem;
     padding-bottom: 10rem;
+  }
+}
+
+.currentWeather_fetching {
+  composes: currentWeather;
+  @include bootstrap.respond-to-screen(medium) {
+    min-height: min(100vh, 90rem);
   }
 }
 
@@ -62,12 +66,12 @@
   filter: opacity(0.05);
 
   @include bootstrap.respond-to-screen(semi-large) {
-    top: 20rem;
+    top: 16rem;
   }
 
   @include bootstrap.respond-to-screen(medium) {
     width: 155vw;
-    top: 10rem;
+    top: 12rem;
     left: -27vw;
   }
 
