@@ -121,12 +121,17 @@ function useWeather(): Weather {
   const rawWeather =
     queryInfo.status === "success" ? queryInfo.data : prevWeatherData;
 
-  const weatherData: Weather = useMemo(
+  const processedWeather = useMemo(
     () =>
       rawWeather
-        ? convertWeatherTemperatures(extractWeatherData(rawWeather), tempUnit)
+        ? extractWeatherData(rawWeather)
         : { coords: currentLocation.coords, daysData: [] },
-    [currentLocation.coords, rawWeather, tempUnit],
+    [currentLocation.coords, rawWeather],
+  );
+
+  const weatherData = useMemo(
+    () => convertWeatherTemperatures(processedWeather, tempUnit),
+    [processedWeather, tempUnit],
   );
 
   const { failureCount, isLoading } = queryInfo;

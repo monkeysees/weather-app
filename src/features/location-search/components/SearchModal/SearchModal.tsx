@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import ReactModal from "react-modal";
 import { useIsFetching } from "react-query";
 import { debounce } from "lodash";
@@ -29,10 +29,7 @@ function SearchModal({
     setSearchQuery(e.target.value);
   }
 
-  const debouncedQueryChangeHandler = useMemo(
-    () => debounce(queryChangeHandler, 250),
-    [],
-  );
+  const debouncedQueryChangeHandler = debounce(queryChangeHandler, 250);
 
   const handleRequestClose = useCallback(() => {
     setSearchQuery("");
