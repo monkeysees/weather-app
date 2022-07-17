@@ -37,7 +37,13 @@ function CurrentWeather() {
       </Heading>
       <p className={styles.location}>
         <Icon type="location" className={styles.location__icon} />
-        <span className={styles.location__place}>{cityToRender}</span>
+        <span
+          className={styles.location__place}
+          aria-label="Weather location"
+          aria-live="polite"
+        >
+          {cityToRender}
+        </span>
       </p>
     </Section>
   );

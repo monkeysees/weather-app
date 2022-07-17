@@ -57,7 +57,7 @@ function SearchModal({
       <Button
         className={styles.closeBtn}
         onClick={onRequestClose}
-        aria={{ "aria-label": "Close modal" }}
+        aria={{ "aria-label": "Close cities search" }}
       >
         <Icon type="close" className={styles.closeIcon} />
       </Button>

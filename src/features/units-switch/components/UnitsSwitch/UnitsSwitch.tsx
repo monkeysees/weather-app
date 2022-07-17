@@ -33,6 +33,7 @@ function UnitsSwitch() {
           <Button
             className={styles.button}
             onClick={() => handleTempUnitSwitch(tempUnit)}
+            aria={{ "aria-label": `Switch to temperature unit ${tempUnit}` }}
           >
             <span className={styles.unit}>{tempUnit}</span>
           </Button>

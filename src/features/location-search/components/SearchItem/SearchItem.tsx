@@ -19,6 +19,7 @@ function SearchItem({
   const { city, country, adminZone1 } = location;
   const countryToRender = country ? `, ${country}` : null;
   const adminZoneToRender = adminZone1 ? `, ${adminZone1}` : null;
+  const itemNameToRender = `${city}${adminZoneToRender}${countryToRender}`;
 
   const handleItemSelected = useCallback(
     () => onItemSelected(location),
@@ -42,12 +43,9 @@ function SearchItem({
         onClick={handleItemSelected}
         onHoverStart={handleItemHoverStart}
         onHoverEnd={handleItemHoverEnd}
+        aria={{ "aria-label": `Fetch weather for ${itemNameToRender}` }}
       >
-        <span className={styles.name}>
-          {city}
-          {adminZoneToRender}
-          {countryToRender}
-        </span>
+        <span className={styles.name}>{itemNameToRender}</span>
         <Icon type="arrow-right" className={styles.icon} />
       </Button>
     </li>

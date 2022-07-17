@@ -136,6 +136,7 @@ function LocationSearch() {
       <Button
         className={styles.searchBtn}
         onClick={() => setIsShowModal(true)}
+        aria={{ "aria-label": "Open cities search" }}
       >
         Search for places
       </Button>
@@ -145,11 +146,9 @@ function LocationSearch() {
           onClick={handleCurrentLocationSelected}
           onHoverStart={handleCurrentLocationHoverStart}
           onHoverEnd={handleCurrentLocationHoverEnd}
+          aria={{ "aria-label": `Fetch weather for current location` }}
         >
-          <Icon
-            type="gps"
-            className={styles.currentLocation__icon}
-          />
+          <Icon type="gps" className={styles.currentLocation__icon} />
         </Button>
       </Ellipse>
     </section>
