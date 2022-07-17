@@ -21,6 +21,10 @@
   }
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 html {
   font-size: 62.5%;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)

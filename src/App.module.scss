@@ -1,7 +1,7 @@
 .app {
   --forecasts-padding-inline: 13rem;
 
-  min-height: 100vh;
+  height: 100%;
   background-color: var(--color-background-dark);
 }
 
@@ -21,6 +21,7 @@
 }
 
 .main {
+  height: 100%;
   display: grid;
   grid-template-columns: 33% 67%;
 }

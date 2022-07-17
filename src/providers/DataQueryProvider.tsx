@@ -24,7 +24,7 @@ function cancelWeatherQuery(location: Location) {
 
 type WeatherQueryKey = ReturnType<typeof getWeatherQueryKey>;
 
-function weatherQueryHandler({
+async function weatherQueryHandler({
   queryKey: [{ coords }],
 }: QueryFunctionContext<WeatherQueryKey>) {
   return axios
