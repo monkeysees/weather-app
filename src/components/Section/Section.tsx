@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { NestingLevelContext } from "../../providers/NestingLevelProvider";
+import NestingLevelContext from "../../providers/NestingLevelProvider";
 import { ChildrenProps } from "../../types/props";
 
 interface Props extends ChildrenProps {
