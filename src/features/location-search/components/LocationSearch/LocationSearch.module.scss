@@ -1,3 +1,5 @@
+@use "../../../../assets/styles/bootstrap";
+
 @mixin btn-common {
   height: 4rem;
   background-color: var(--color-grey-medium);
@@ -7,6 +9,13 @@
 .wrapper {
   display: flex;
   justify-content: space-between;
+
+  @include bootstrap.respond-to-screen(medium) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    row-gap: 1.8rem;
+  }
 }
 
 .searchBtn {

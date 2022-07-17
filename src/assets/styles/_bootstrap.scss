@@ -1,0 +1,31 @@
+// 1400px
+$large-screen-width: 90em;
+
+// 1200px
+$semi-large-screen-width: 75em;
+
+// 900px
+$medium-screen-width: 56.25em;
+
+// 375px
+$small-screen-width: 23.4375em;
+
+@mixin respond-to-screen($size) {
+  @if $size == semi-large {
+    @media only screen and (max-width: $semi-large-screen-width) {
+      @content;
+    }
+  }
+
+  @if $size == medium {
+    @media only screen and (max-width: $medium-screen-width) {
+      @content;
+    }
+  }
+
+  @if $size == small {
+    @media only screen and (max-width: $small-screen-width) {
+      @content;
+    }
+  }
+}

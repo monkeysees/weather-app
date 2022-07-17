@@ -1,4 +1,5 @@
 @use "./assets/styles/base";
+@use "./assets/styles/bootstrap";
 
 :root {
   --font-default: "Raleway", system-ui, -apple-system, "BlinkMacSystemFont",
@@ -19,9 +20,15 @@
     --color-dark: black;
     --color-light: white;
   }
+
+  --large-screen-width: #{bootstrap.$large-screen-width};
+  --medium-screen-width: #{bootstrap.$medium-screen-width};
+  --small-screen-width: #{bootstrap.$small-screen-width};
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -34,7 +41,8 @@ html {
 body {
   color: var(--color-light);
   font-family: var(--font-default);
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 500;
   line-height: 1.175;
+  overflow-x: hidden;
 }

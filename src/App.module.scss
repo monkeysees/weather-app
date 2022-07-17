@@ -1,5 +1,7 @@
+@use "./assets/styles/bootstrap";
+
 .app {
-  --forecasts-padding-inline: 13rem;
+  --forecasts-padding-inline: 9vw;
 
   height: 100%;
   background-color: var(--color-background-dark);
@@ -11,6 +13,10 @@
   top: 4.2rem;
   left: 3%;
   width: 27%;
+
+  @include bootstrap.respond-to-screen(medium) {
+    width: max-content;
+  }
 }
 
 .unitsSwitch {
@@ -18,29 +24,64 @@
   z-index: 1;
   top: 4.2rem;
   right: var(--forecasts-padding-inline);
+
+  @include bootstrap.respond-to-screen(medium) {
+    right: 3%;
+  }
 }
 
 .main {
   height: 100%;
   display: grid;
   grid-template-columns: 33% 67%;
+
+  @include bootstrap.respond-to-screen(medium) {
+    grid-template-columns: 100%;
+  }
 }
 
 .currentWeather {
-  padding: 19rem 13rem 5rem;
+  height: 100%;
+  padding: 19rem 9vw 5rem;
   background-color: var(--color-background-medium);
+
+  @include bootstrap.respond-to-screen(medium) {
+    min-height: 90rem;
+    height: max-content;
+    padding-top: 13rem;
+    padding-bottom: 10rem;
+  }
 }
 
 .currentWeatherBg {
   position: absolute;
   top: 10rem;
-  left: -12rem;
-  width: 70rem;
+  left: -8.33vw;
+  width: 50vw;
+  max-width: unset;
   filter: opacity(0.05);
+
+  @include bootstrap.respond-to-screen(semi-large) {
+    top: 20rem;
+  }
+
+  @include bootstrap.respond-to-screen(medium) {
+    width: 155vw;
+    top: 10rem;
+    left: -27vw;
+  }
+
+  @include bootstrap.respond-to-screen(small) {
+    top: 14rem;
+  }
 }
 
 .forecastAndHighlights {
   padding: 15rem var(--forecasts-padding-inline);
   background-color: var(--color-background-dark);
   z-index: 0;
+
+  @include bootstrap.respond-to-screen(medium) {
+    padding: 5rem 14vw;
+  }
 }

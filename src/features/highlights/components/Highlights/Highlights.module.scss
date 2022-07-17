@@ -1,12 +1,22 @@
+@use "../../../../assets/styles/bootstrap";
+
 .heading {
   font-size: 2.4rem;
   font-weight: 700;
   text-transform: capitalize;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.22vw;
+
+  @include bootstrap.respond-to-screen(medium) {
+    margin-bottom: 7vw;
+  }
 }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: 3.33vw;
+
+  @include bootstrap.respond-to-screen(medium) {
+    gap: 7vw;
+  }
 }

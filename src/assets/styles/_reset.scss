@@ -42,7 +42,7 @@ select {
 
 /* Better defaults */
 input {
-  cursor: currentcolor;
+  caret-color: currentcolor;
 
   &::placeholder {
     opacity: 1;

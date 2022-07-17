@@ -1,3 +1,23 @@
+@use "../../../../assets/styles/bootstrap";
+
+.modal_open {
+  overflow: hidden;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 33%;
+  z-index: 1;
+
+  @include bootstrap.respond-to-screen(medium) {
+    width: 100%;
+  }
+}
+
 .wrapper {
   position: absolute;
   width: 100%;
@@ -13,18 +33,31 @@
 .closeBtn {
   width: max-content;
   justify-self: end;
+  margin-bottom: 4.5rem;
+
+  @include bootstrap.respond-to-screen(medium) {
+    margin-bottom: 2.4rem;
+  }
 }
 
 .closeIcon {
   width: 3.2rem;
   height: 3.2rem;
   fill: var(--color-light);
-  margin-bottom: 4.5rem;
+
+  @include bootstrap.respond-to-screen(medium) {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
 }
 
 .inputSection {
   height: 5rem;
   margin-bottom: 6rem;
+
+  @include bootstrap.respond-to-screen(medium) {
+    margin-bottom: 4.5rem;
+  }
 
   &__field {
     position: relative;
@@ -35,6 +68,7 @@
 
   &__input {
     height: 100%;
+    width: 100%;
     padding-left: 4.8rem;
     padding-right: 1.2rem;
 

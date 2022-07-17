@@ -1,6 +1,13 @@
+@use "../../../../assets/styles/bootstrap";
+
 .wrapper {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  column-gap: 2.5rem;
-  margin-bottom: 7.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1.66vw;
+  margin-bottom: 5vw;
+
+  @include bootstrap.respond-to-screen(medium) {
+    gap: 7vw;
+    margin-bottom: 14vw;
+  }
 }

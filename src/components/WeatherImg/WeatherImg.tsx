@@ -43,10 +43,20 @@ interface Props {
   type: WeatherType;
   alt?: string;
   className?: string;
+  width?: React.ImgHTMLAttributes<HTMLImageElement>["width"];
+  height?: React.ImgHTMLAttributes<HTMLImageElement>["height"];
 }
 
-function WeatherImg({ type, alt = "", className }: Props) {
-  return <img src={getImgSrc(type)} alt={alt} className={className} />;
+function WeatherImg({ type, alt = "", className, width, height }: Props) {
+  return (
+    <img
+      src={getImgSrc(type)}
+      alt={alt}
+      className={className}
+      width={width}
+      height={height}
+    />
+  );
 }
 
 export default WeatherImg;

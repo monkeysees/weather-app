@@ -49,10 +49,9 @@ function SearchModal({
       isOpen={isOpen}
       onRequestClose={handleRequestClose}
       shouldReturnFocusAfterClose={false}
-      style={{
-        overlay: { backgroundColor: "none", zIndex: 1, width: "33%" },
-      }}
       className={styles.wrapper}
+      overlayClassName={styles.overlay}
+      bodyOpenClassName={styles.modal_open}
     >
       <Button
         className={styles.closeBtn}

@@ -11,6 +11,7 @@ import Forecast from "./features/forecast";
 import Hightlights from "./features/highlights";
 import cloudsBgImgSrc from "./assets/images/background/clouds.png";
 import styles from "./App.module.scss";
+import { registerWindowResizeHandler } from "./utils/dom";
 
 function App() {
   const {
@@ -26,6 +27,9 @@ function App() {
       toast.dismiss("weather_loading");
     }
   }, [isFetchingCurrentWeather]);
+  useEffect(() => {
+    registerWindowResizeHandler();
+  }, []);
 
   return (
     <>
