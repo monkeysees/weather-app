@@ -4,6 +4,7 @@ import {
   Heading,
   Icon,
   WeatherImg,
+  Temperature,
   AppearanceFade,
 } from "../../../../components";
 import { useTodayWeather, useWeatherLocation } from "../../../../hooks/weather";
@@ -22,7 +23,7 @@ function CurrentWeather() {
     date,
   } = todayWeather.data;
 
-  const cityToRender = "city" in location ? location.city : "Current location";
+  const locationName = "city" in location ? location.city : "Current location";
 
   return (
     <AppearanceFade started={!!todayWeather.data}>
@@ -32,14 +33,13 @@ function CurrentWeather() {
           alt={weatherDescription.details}
           className={styles.image}
         />
-        <p className={styles.temperature}>
-          <span className={styles.temperature__value}>
-            {dayTemperature.value}
-          </span>
-          <span className={styles.temperature__unit}>
-            {dayTemperature.unit}
-          </span>
-        </p>
+        <Temperature
+          value={dayTemperature.value}
+          unit={dayTemperature.unit}
+          className={styles.temperature}
+          valueClassName={styles.temperature__value}
+          unitClassName={styles.temperature__unit}
+        />
         <p className={styles.description}>{weatherDescription.title}</p>
         <Heading className={styles.heading}>
           Today <span>•</span> {formatDate(date)}
@@ -51,7 +51,7 @@ function CurrentWeather() {
             aria-label="Weather location"
             aria-live="polite"
           >
-            {cityToRender}
+            {locationName}
           </span>
         </p>
       </Section>

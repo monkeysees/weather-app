@@ -1,108 +1,28 @@
 import { useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
+import { useQueryClient, onlineManager } from "react-query";
 import {
-  useQueryClient,
-  useQuery,
-  QueryFunctionContext,
-  QueryClient,
-  onlineManager,
-} from "react-query";
-import axios, { CanceledError } from "axios";
+  useCitiesQuery,
+  useWeatherQuery,
+  getWeatherQueryData,
+  handleNoInternet,
+} from "../providers/DataQueryProvider";
 import { useUser, useUserDispatch } from "../providers/UserProvider";
 import {
-  CitiesResponse,
-  getWeatherQueryKey,
-  useWeatherQuery,
-  WeatherResponseWithCoords,
-} from "../providers/DataQueryProvider";
-import {
-  Weather,
-  CityLocation,
-  Location,
-  TodayWeather,
-} from "../types/weather";
-import {
   convertWeatherTemperatures,
-  extractCitiesData,
   extractWeatherData,
   findLocationByCoords,
 } from "../utils/weather";
-
-function getCitiesQueryKey(searchQuery: string) {
-  return [{ scope: "cities", searchQuery }] as const;
-}
-type CitiesQueryKey = ReturnType<typeof getCitiesQueryKey>;
-
-function getErrorMsg(e: unknown) {
-  return e instanceof Error ? e.message : "Something went wrong";
-}
-
-function fetchRawCities(
-  queryClient: QueryClient,
-  { queryKey: [{ searchQuery }], signal }: QueryFunctionContext<CitiesQueryKey>,
-) {
-  queryClient.cancelQueries([{ scope: "cities" }]);
-
-  if (!searchQuery) {
-    return [];
-  }
-
-  return axios
-    .get<CitiesResponse>(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}`,
-      {
-        signal,
-      },
-    )
-    .then((res) => extractCitiesData(res.data))
-    .catch((e: unknown) => {
-      const isCancelError = e instanceof CanceledError;
-      if (!isCancelError) {
-        toast.error(getErrorMsg(e), {
-          id: `search-cities_error_${searchQuery}`,
-        });
-      }
-
-      throw e;
-    });
-}
-
-function handleNoInternet(queryClient: QueryClient) {
-  queryClient.cancelQueries();
-  toast.error("No internet connection", {
-    id: "no-internet",
-  });
-}
+import { Weather, Location, TodayWeather } from "../types/weather";
 
 function useCities(searchQuery: string) {
-  const queryClient = useQueryClient();
-  const queryKey = getCitiesQueryKey(searchQuery);
-  const queryInfo = useQuery<
-    CityLocation[],
-    unknown,
-    CityLocation[],
-    CitiesQueryKey
-  >(queryKey, (queryCtx) => fetchRawCities(queryClient, queryCtx), {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-    onError: (error) => {
-      if (error) {
-        const errorMsg =
-          error instanceof Error ? error.message : "Something went wrong";
-        toast.error(errorMsg, {
-          id: `search-cities_error`,
-        });
-        queryClient.cancelQueries(queryKey);
-      }
-    },
-  });
+  const queryInfo = useCitiesQuery(searchQuery);
 
   const { failureCount, isLoading } = queryInfo;
   useEffect(() => {
     if (isLoading && !onlineManager.isOnline()) {
-      handleNoInternet(queryClient);
+      handleNoInternet();
     }
-  }, [queryClient, isLoading, failureCount]);
+  }, [isLoading, failureCount]);
 
   const cities = queryInfo.status === "success" ? queryInfo.data : [];
 
@@ -116,13 +36,11 @@ function useWeather(): Weather {
     units: { temperature: tempUnit },
   } = useUser();
   const userDispatch = useUserDispatch();
-  const queryInfo = useWeatherQuery(currentLocation.coords);
+  const queryInfo = useWeatherQuery(currentLocation);
 
   const prevLocation = searchHistory[1];
   const prevWeatherData = prevLocation
-    ? queryClient.getQueryData<WeatherResponseWithCoords>(
-        getWeatherQueryKey(prevLocation.coords),
-      )
+    ? getWeatherQueryData(prevLocation)
     : undefined;
 
   const rawWeather =
@@ -149,7 +67,7 @@ function useWeather(): Weather {
         type: "change-location",
         location: findLocationByCoords(searchHistory, weatherData.coords),
       });
-      handleNoInternet(queryClient);
+      handleNoInternet();
     }
   }, [
     queryClient,

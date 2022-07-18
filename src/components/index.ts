@@ -7,6 +7,7 @@ import Icon from "./Icon";
 import Button from "./Button";
 import Spinner from "./Spinner";
 import WeatherImg from "./WeatherImg";
+import Temperature from "./Temperature";
 
 export {
   ErrorBoundary,
@@ -18,4 +19,5 @@ export {
   Button,
   Spinner,
   WeatherImg,
+  Temperature,
 };

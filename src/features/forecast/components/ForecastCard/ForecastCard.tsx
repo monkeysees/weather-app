@@ -1,6 +1,11 @@
 import React from "react";
 import { isTomorrow } from "date-fns";
-import { Section, Heading, WeatherImg } from "../../../../components";
+import {
+  Section,
+  Heading,
+  WeatherImg,
+  Temperature,
+} from "../../../../components";
 import { WeatherDayData } from "../../../../types/weather";
 import { formatDate } from "../../../../utils/datetime";
 import styles from "./ForecastCard.module.scss";
@@ -22,14 +27,14 @@ function ForecastCard({ dayData: { date, description, temperature } }: Props) {
         className={styles.image}
       />
       <div className={styles.temperatures}>
-        <span>
-          {temperature.day.value}
-          {temperature.day.unit}
-        </span>
-        <span className={styles.temperature_night}>
-          {temperature.night.value}
-          {temperature.night.unit}
-        </span>
+        <Temperature
+          value={temperature.day.value}
+          unit={temperature.day.unit}
+        />
+        <Temperature
+          value={temperature.night.value}
+          unit={temperature.night.unit}
+        />
       </div>
     </Section>
   );

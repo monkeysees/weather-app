@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import ReactModal from "react-modal";
-import DataQueryProvider from "./providers/DataQueryProvider";
+import DataQueryProvider from "./providers/DataQueryProvider/DataQueryProvider";
 import { UserProvider } from "./providers/UserProvider";
 import App from "./App";
 import "./index.scss";
@@ -17,6 +17,8 @@ const root = ReactDOM.createRoot(rootElement);
 ReactModal.setAppElement(`#${rootElementId}`);
 
 root.render(
+  // Note: react-transition-group internally uses outdated findDOMNode
+  // which causes a console warning in StrictMode.
   <React.StrictMode>
     <DataQueryProvider>
       <UserProvider>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useIsFetching, useQueryClient } from "react-query";
 import { Toaster, toast } from "react-hot-toast";
 import { useUser } from "./providers/UserProvider";
-import { getWeatherQueryKey } from "./providers/DataQueryProvider";
+import {
+  getWeatherQueryState,
+  useIsFetchingWeather,
+} from "./providers/DataQueryProvider";
 import { ErrorBoundary } from "./components";
 import LocationSearch from "./features/location-search";
 import UnitsSwitch from "./features/units-switch";
@@ -14,12 +16,10 @@ import { registerWindowResizeHandler } from "./utils/dom";
 import styles from "./App.module.scss";
 
 function App() {
-  const queryClient = useQueryClient();
   const {
     location: { current: currentLocation },
   } = useUser();
-  const currentWeatherQueryKey = getWeatherQueryKey(currentLocation.coords);
-  const isFetchingCurrentWeather = useIsFetching(currentWeatherQueryKey);
+  const isFetchingCurrentWeather = useIsFetchingWeather(currentLocation);
   const [isFetchedFirstWeather, setIsFetchedFirstWeather] = useState(false);
 
   useEffect(() => {
@@ -29,20 +29,14 @@ function App() {
       toast.dismiss("weather_loading");
 
       if (!isFetchedFirstWeather) {
-        const currentWeatherQueryStatus = queryClient.getQueryState(
-          currentWeatherQueryKey,
-        )?.status;
+        const currentWeatherQueryStatus =
+          getWeatherQueryState(currentLocation)?.status;
         if (currentWeatherQueryStatus === "success") {
           setIsFetchedFirstWeather(true);
         }
       }
     }
-  }, [
-    queryClient,
-    currentWeatherQueryKey,
-    isFetchedFirstWeather,
-    isFetchingCurrentWeather,
-  ]);
+  }, [currentLocation, isFetchedFirstWeather, isFetchingCurrentWeather]);
   useEffect(() => {
     registerWindowResizeHandler();
   }, []);

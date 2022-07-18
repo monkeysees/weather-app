@@ -23,10 +23,7 @@ import type {
   CityLocation,
   Coordinates,
 } from "../types/weather";
-import {
-  CitiesResponse,
-  WeatherResponseWithCoords,
-} from "../providers/DataQueryProvider";
+import { CitiesResponse, WeatherResponseWithCoords } from "../types/query";
 
 const weatherDescriptionByCode: {
   [key in WeatherCode]: {
