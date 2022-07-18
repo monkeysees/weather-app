@@ -5,6 +5,7 @@ import { useCities } from "../../../../hooks/weather";
 import { CityLocation } from "../../../../types/weather";
 import SearchItem from "../SearchItem";
 import styles from "./SearchList.module.scss";
+import { AppearanceFade } from "../../../../components";
 
 interface Props {
   searchQuery: string;
@@ -40,15 +41,19 @@ function LocationSearch({
   const citiesToList = searchQuery ? currentSearchCities : citiesSearchHistory;
   const citiesToRender = (
     <ul className={styles.wrapper}>
-      {citiesToList.map((location) => (
-        <SearchItem
-          key={`${location.coords.lat} ${location.coords.lon}`}
-          location={location}
-          onItemSelected={onItemSelected}
-          onItemHoverStart={onItemHoverStart}
-          onItemHoverEnd={onItemHoverEnd}
-        />
-      ))}
+      {citiesToList.map((location) => {
+        const locationKey = `${location.coords.lat} ${location.coords.lon}`;
+        return (
+          <AppearanceFade key={locationKey} started={!!locationKey}>
+            <SearchItem
+              location={location}
+              onItemSelected={onItemSelected}
+              onItemHoverStart={onItemHoverStart}
+              onItemHoverEnd={onItemHoverEnd}
+            />
+          </AppearanceFade>
+        );
+      })}
     </ul>
   );
   const fallbackToRender = isFetching ? null : <p>No results</p>;

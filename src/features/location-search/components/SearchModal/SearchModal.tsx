@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { useIsFetching } from "react-query";
 import { debounce } from "lodash";
 import { Location } from "../../../../types/weather";
-import { Button, Icon, Spinner } from "../../../../components";
+import { AppearanceFade, Button, Icon, Spinner } from "../../../../components";
 import SearchList from "../SearchList";
 import styles from "./SearchModal.module.scss";
 
@@ -71,7 +71,11 @@ function SearchModal({
           <Icon type="search" className={styles.inputSection__icon} />
         </div>
       </section>
-      {isFetchingCities && <Spinner className={styles.spinner} />}
+      {isFetchingCities && (
+        <AppearanceFade started={isFetchingCities}>
+          <Spinner className={styles.spinner} />
+        </AppearanceFade>
+      )}
       <SearchList
         searchQuery={searchQuery}
         onItemSelected={handleSearchItemSelected}
