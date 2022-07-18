@@ -3,7 +3,6 @@
   display: grid;
   grid-template-columns: 100%;
   grid-auto-rows: max-content;
-  row-gap: 0.6rem;
   justify-content: center;
   justify-items: center;
   align-items: start;
@@ -12,12 +11,14 @@
 
 .heading {
   text-transform: capitalize;
+  margin-bottom: 0.6rem;
 }
 
 .info {
   display: flex;
   align-items: center;
   column-gap: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .value {
