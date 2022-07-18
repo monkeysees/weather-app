@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 100%;
   grid-auto-rows: max-content;
-  justify-content: center;
+  place-content: center;
   justify-items: center;
   align-items: start;
   background-color: var(--color-background-medium);

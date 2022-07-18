@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { debounce } from "lodash";
 
 function getPxSizeFromEm(em: string) {
-  return Number(em.slice(0, 2)) * 16;
+  return Number(em.slice(0, -2)) * 16;
 }
 
 const rootEl = document.documentElement;
@@ -18,7 +17,7 @@ const smallScreenWidth = getPxSizeFromEm(
 );
 
 function getFontChangeRate(currentWidth: number, baseWidth: number) {
-  return currentWidth < baseWidth ? 0.15 : 1;
+  return currentWidth < baseWidth ? 0.15 : 1.15;
 }
 
 function handleWindowResize() {
