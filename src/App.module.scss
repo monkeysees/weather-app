@@ -86,6 +86,12 @@
   z-index: 0;
 
   @include bootstrap.respond-to-screen(medium) {
-    padding: 5rem 14vw;
+    padding: 5rem 6.4vw;
+  }
+}
+
+.forecast {
+  @include bootstrap.respond-to-screen(medium) {
+    padding: 0 8vw;
   }
 }

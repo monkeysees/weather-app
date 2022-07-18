@@ -74,7 +74,9 @@ function App() {
           </div>
           <div className={styles.forecastAndHighlights}>
             <ErrorBoundary>
-              <Forecast />
+              <div className={styles.forecast}>
+                <Forecast />
+              </div>
               <Hightlights />
             </ErrorBoundary>
           </div>

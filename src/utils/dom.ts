@@ -16,15 +16,19 @@ const smallScreenWidth = getPxSizeFromEm(
   rootStyles.getPropertyValue("--small-screen-width"),
 );
 
-function getFontChangeRate(currentWidth: number, baseWidth: number) {
-  return currentWidth < baseWidth ? 0.15 : 1.15;
+function getFontChangeRate(currentWidth: number) {
+  if (currentWidth < mediumScreenWidth) {
+    return currentWidth < smallScreenWidth ? 0.35 : 1.15;
+  }
+
+  return currentWidth < largeScreenWidth ? 0.15 : 1.15;
 }
 
 function handleWindowResize() {
   const windowWidth = window.innerWidth;
   const baseScreenWidth =
     windowWidth > mediumScreenWidth ? largeScreenWidth : smallScreenWidth;
-  const fontChangeRate = getFontChangeRate(windowWidth, baseScreenWidth);
+  const fontChangeRate = getFontChangeRate(windowWidth);
   const fontBaseSizeMultiplier =
     (windowWidth / baseScreenWidth) ** fontChangeRate;
   const newFontBaseSize = fontBaseSizeMultiplier * 62.5;
