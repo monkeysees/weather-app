@@ -29,3 +29,19 @@ $small-screen-width: 23.4375em;
     }
   }
 }
+
+@mixin button-activity-effects {
+  &:focus,
+  &:focus-within,
+  &:hover {
+    transition: background-color var(--transition-config-default),
+      color var(--transition-config-default);
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+
+    & svg {
+      transition: fill var(--transition-config-default);
+      fill: var(--color-dark);
+    }
+  }
+}

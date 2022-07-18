@@ -16,6 +16,8 @@
   @include bootstrap.respond-to-screen(medium) {
     box-shadow: 0 0.4rem 0.4rem rgba(0 0 0 / 25%);
   }
+
+  @include bootstrap.button-activity-effects;
 }
 
 .switch_active {

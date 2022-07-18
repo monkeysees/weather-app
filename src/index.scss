@@ -8,6 +8,7 @@
   --color-dark: rgba(17 14 60 / 100%);
   --color-light: rgba(231 231 235 / 100%);
   --color-primary: rgba(60 71 233 / 100%);
+  --color-accent: rgba(254 241 89 / 100%);
   --color-grey-dark: rgba(97 100 117 / 100%);
   --color-grey-medium: rgba(110 112 122 / 100%);
   --color-grey-light: rgba(160 159 177 / 100%);
@@ -21,6 +22,7 @@
     --color-light: white;
   }
 
+  --transition-config-default: 150ms ease-in-out;
   --large-screen-width: #{bootstrap.$large-screen-width};
   --medium-screen-width: #{bootstrap.$medium-screen-width};
   --small-screen-width: #{bootstrap.$small-screen-width};
