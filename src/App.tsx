@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useUser } from "./providers/UserProvider";
 import {
@@ -37,7 +37,7 @@ function App() {
       }
     }
   }, [currentLocation, isFetchedFirstWeather, isFetchingCurrentWeather]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     registerWindowResizeHandler();
   }, []);
 

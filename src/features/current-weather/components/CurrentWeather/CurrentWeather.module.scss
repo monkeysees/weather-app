@@ -18,8 +18,8 @@
   margin-bottom: 7rem;
 
   @include bootstrap.respond-to-screen(medium) {
-    width: 50vw;
-    height: 50vw;
+    width: 17.5rem;
+    height: 17.5rem;
     margin-bottom: 4rem;
   }
 }
