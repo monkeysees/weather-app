@@ -24,10 +24,7 @@ function App() {
 
   useEffect(() => {
     if (isFetchingCurrentWeather) {
-      toast.loading(
-        "Fetching weather…",
-        { id: "weather_loading" },
-      );
+      toast.loading("Fetching weather…", { id: "weather_loading" });
     } else {
       toast.dismiss("weather_loading");
 
@@ -100,6 +97,14 @@ function App() {
             </ErrorBoundary>
           </div>
         </div>
+        <p className={styles.attribution}>
+          <a
+            href="https://open-meteo.com/"
+            className={styles.attribution__link}
+          >
+            Weather data by Open-Meteo.com
+          </a>
+        </p>
       </main>
     </>
   );

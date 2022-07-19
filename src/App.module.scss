@@ -6,9 +6,30 @@
 }
 
 .app {
-  --forecasts-padding-inline: 9vw;
+  --forecastsHighlights-padding-inline-large-screen: 9vw;
+  --currentWeather-part-large-screen: 33%;
+  --forecastsHightlights-part-desktop: calc(
+    100% - var(--currentWeather-part-large-screen)
+  );
 
-  background-color: var(--color-background-dark);
+  // make it relative for attribution positioning
+  position: relative;
+
+  // leave space for attribution
+  padding-bottom: 5rem;
+
+  // background is needed so that bottom space left for attribution is properly colored
+  background: linear-gradient(
+    to right,
+    var(--color-background-medium) var(--currentWeather-part-large-screen),
+    var(--color-background-dark) var(--currentWeather-part-large-screen)
+  );
+
+  @include bootstrap.respond-to-screen(medium) {
+    // background color is still needed on small screens
+    // otherwise there is ~pixel-wide white spice between sections
+    background: var(--color-background-dark);
+  }
 }
 
 .locationSearch {
@@ -27,7 +48,7 @@
   position: absolute;
   z-index: 1;
   top: 4.2rem;
-  right: var(--forecasts-padding-inline);
+  right: var(--forecastsHighlights-padding-inline-large-screen);
 
   @include bootstrap.respond-to-screen(medium) {
     right: 3%;
@@ -38,7 +59,9 @@
   // min-height property is used to make the site's height to always be at least 100vh
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 33% 67%;
+  grid-template-columns: var(--currentWeather-part-large-screen) var(
+      --forecastsHightlights-part-desktop
+    );
 
   @include bootstrap.respond-to-screen(medium) {
     grid-template-columns: 100%;
@@ -86,7 +109,7 @@
 }
 
 .forecastAndHighlights {
-  padding: 15rem var(--forecasts-padding-inline);
+  padding: 15rem var(--forecastsHighlights-padding-inline-large-screen) 10rem;
   background-color: var(--color-background-dark);
   z-index: 0;
 
@@ -101,5 +124,27 @@
   @include bootstrap.respond-to-screen(medium) {
     padding: 0 8vw;
     margin-bottom: 4.8rem;
+  }
+}
+
+.attribution {
+  position: absolute;
+  bottom: 1.6rem;
+  right: 0;
+  width: var(--forecastsHightlights-part-desktop);
+  text-align: center;
+
+  @include bootstrap.respond-to-screen(medium) {
+    width: 100%;
+  }
+
+  &__link {
+    transition: color var(--transition-config-default);
+
+    &:focus,
+    &:hover,
+    &:active {
+      color: var(--color-accent);
+    }
   }
 }
