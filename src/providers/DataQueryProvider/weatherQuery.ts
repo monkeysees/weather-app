@@ -1,4 +1,9 @@
-import { QueryFunctionContext, useIsFetching, useQuery } from "react-query";
+import {
+  onlineManager,
+  QueryFunctionContext,
+  useIsFetching,
+  useQuery,
+} from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { minutesToMilliseconds, hoursToMilliseconds } from "date-fns";
@@ -51,6 +56,10 @@ function useWeatherQuery(location: Location) {
 }
 
 function prefetchWeatherLocation(location: Location) {
+  if (!onlineManager.isOnline()) {
+    return;
+  }
+
   queryClient.prefetchQuery(
     getWeatherQueryKey(location.coords),
     weatherQueryHandler,
