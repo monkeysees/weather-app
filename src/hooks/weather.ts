@@ -19,10 +19,10 @@ function useCities(searchQuery: string) {
 
   const { failureCount, isLoading } = queryInfo;
   useEffect(() => {
-    if (isLoading && !onlineManager.isOnline()) {
+    if (searchQuery && isLoading && !onlineManager.isOnline()) {
       handleNoInternet();
     }
-  }, [isLoading, failureCount]);
+  }, [searchQuery, isLoading, failureCount]);
 
   const cities = queryInfo.status === "success" ? queryInfo.data : [];
 
