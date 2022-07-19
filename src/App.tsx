@@ -24,7 +24,10 @@ function App() {
 
   useEffect(() => {
     if (isFetchingCurrentWeather) {
-      toast.loading("Fetching weather…", { id: "weather_loading" });
+      toast.loading(
+        "Fetching weather…",
+        { id: "weather_loading" },
+      );
     } else {
       toast.dismiss("weather_loading");
 
@@ -43,7 +46,23 @@ function App() {
 
   return (
     <>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          className: styles.toaster,
+          loading: {
+            iconTheme: {
+              primary: "var(--color-dark)",
+              secondary: "var(--color-grey-very-light)",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "var(--color-error)",
+              secondary: "var(--color-light)",
+            },
+          },
+        }}
+      />
       <main className={styles.app}>
         <div className={styles.locationSearch}>
           <ErrorBoundary>

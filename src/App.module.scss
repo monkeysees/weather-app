@@ -1,5 +1,10 @@
 @use "./assets/styles/bootstrap";
 
+.toaster {
+  background-color: var(--color-light);
+  color: var(--color-dark);
+}
+
 .app {
   --forecasts-padding-inline: 9vw;
 
