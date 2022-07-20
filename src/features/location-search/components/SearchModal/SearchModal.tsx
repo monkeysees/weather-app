@@ -44,6 +44,10 @@ function SearchModal({
     [handleRequestClose, onNewLocationSelected],
   );
 
+  function focusSearchInputOnOpening(searchInput: HTMLInputElement) {
+    searchInput.focus();
+  }
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -52,6 +56,16 @@ function SearchModal({
       className={styles.wrapper}
       overlayClassName={styles.overlay}
       bodyOpenClassName={styles.modal_open}
+      contentRef={(node) => {
+        if (!node) {
+          return;
+        }
+
+        const searchInput = node.querySelector("input");
+        if (searchInput) {
+          focusSearchInputOnOpening(searchInput);
+        }
+      }}
     >
       <Button
         className={styles.closeBtn}
