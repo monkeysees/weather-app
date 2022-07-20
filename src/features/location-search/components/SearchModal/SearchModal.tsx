@@ -53,6 +53,7 @@ function SearchModal({
       isOpen={isOpen}
       onRequestClose={handleRequestClose}
       shouldReturnFocusAfterClose={false}
+      contentLabel="Form for searching cities"
       className={styles.wrapper}
       overlayClassName={styles.overlay}
       bodyOpenClassName={styles.modal_open}
@@ -67,36 +68,42 @@ function SearchModal({
         }
       }}
     >
-      <Button
-        className={styles.closeBtn}
-        onClick={onRequestClose}
-        aria={{ "aria-label": "Close cities search" }}
+      <section
+        className={styles.content}
+        aria-live="polite"
+        aria-busy={isFetchingCities ? "true" : "false"}
       >
-        <Icon type="close" className={styles.closeIcon} />
-      </Button>
-      <section className={styles.inputSection}>
-        <div className={styles.inputSection__field}>
-          <input
-            aria-label="Search location"
-            placeholder="Search location"
-            className={styles.inputSection__input}
-            onChange={debouncedQueryChangeHandler}
-          />
-          <Icon type="search" className={styles.inputSection__icon} />
-        </div>
+        <Button
+          className={styles.closeBtn}
+          onClick={onRequestClose}
+          aria={{ "aria-label": "Close cities search" }}
+        >
+          <Icon type="close" className={styles.closeIcon} />
+        </Button>
+        <section className={styles.inputSection}>
+          <div className={styles.inputSection__field}>
+            <input
+              aria-label="Search location"
+              placeholder="Search location"
+              className={styles.inputSection__input}
+              onChange={debouncedQueryChangeHandler}
+            />
+            <Icon type="search" className={styles.inputSection__icon} />
+          </div>
+        </section>
+        {isFetchingCities && (
+          <AppearanceFade started={isFetchingCities}>
+            <Spinner className={styles.spinner} ariaLabel="Fetching cities…" />
+          </AppearanceFade>
+        )}
+        <SearchList
+          searchQuery={searchQuery}
+          onItemSelected={handleSearchItemSelected}
+          onItemHoverStart={onNewLocationHoverStart}
+          onItemHoverEnd={onNewLocationHoverEnd}
+          isFetching={isFetchingCities}
+        />
       </section>
-      {isFetchingCities && (
-        <AppearanceFade started={isFetchingCities}>
-          <Spinner className={styles.spinner} />
-        </AppearanceFade>
-      )}
-      <SearchList
-        searchQuery={searchQuery}
-        onItemSelected={handleSearchItemSelected}
-        onItemHoverStart={onNewLocationHoverStart}
-        onItemHoverEnd={onNewLocationHoverEnd}
-        isFetching={isFetchingCities}
-      />
     </ReactModal>
   );
 }

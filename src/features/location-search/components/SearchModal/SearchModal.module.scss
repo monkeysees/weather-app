@@ -24,6 +24,9 @@
   height: 100%;
   background-color: var(--color-background-medium);
   overflow: auto;
+}
+
+.content {
   padding: 2rem 3.33vw 3rem;
   display: grid;
   grid-template-columns: 100%;
