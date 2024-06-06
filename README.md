@@ -6,7 +6,7 @@
 
 <div align="center">
   <h3>
-    <a href="https://weather.islambeg.me/">
+    <!-- <a href="https://weather.islambeg.me/">
       Demo
     </a>
     <span> | </span>
@@ -16,7 +16,7 @@
     <span> | </span>
     <a href="https://devchallenges.io/challenges/mM1UIenRhK808W8qmLWv">
       Challenge
-    </a>
+    </a> -->
   </h3>
 </div>
 
@@ -71,5 +71,4 @@ $ npm start
 
 ## Contact
 
-- Email islambeg@proton.me
-- Gitlab [@islambeg](https://gitlab.com/islambeg)
+- Email monkeyseesone@gmail.com
