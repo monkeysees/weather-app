@@ -42,7 +42,7 @@
     "stylelint-config-standard-scss": "^4.0.0"
   },
   "scripts": {
-    "prepare": "husky install && husky add .husky/pre-commit 'npx lint-staged' && git add .husky/pre-commit",
+    "huskify": "husky install && husky add .husky/pre-commit 'npx lint-staged' && git add .husky/pre-commit",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --cache",
