@@ -2,7 +2,7 @@
   "name": "weather-app",
   "version": "0.0.1",
   "private": true,
-  "author": "islambeg",
+  "author": "monkeysees",
   "license": "Unlicense",
   "dependencies": {
     "@types/node": "^16.11.43",
